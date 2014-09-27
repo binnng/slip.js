@@ -46,18 +46,16 @@
 
     constructor: (@ele, @direction) ->
 
-      @coord = null 
 
-      # 开始的回调,移动中回调,结束的回调
+      # 开始的回调
+      # 移动中回调
+      # 结束的回调
       @onStart = @onMove = @onEnd = noop
-
-      # 事件的位移
-      # 用于在各种事件中传递
-      @eventCoords = null
-
-      # 当touchstart时候，缓存当前的位移
-      # 用于touchmove中计算
-      @cacheCoords = null
+      
+      # coord: 元素实际坐标值
+      # eventCoords: 事件的位移，用于在各种事件中传递
+      # chcheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
+      @coord = @eventCoords = @cacheCoords = null
 
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @

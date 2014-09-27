@@ -41,10 +41,8 @@
     function Slip(ele, direction) {
       this.ele = ele;
       this.direction = direction;
-      this.coord = null;
       this.onStart = this.onMove = this.onEnd = noop;
-      this.eventCoords = null;
-      this.cacheCoords = null;
+      this.coord = this.eventCoords = this.cacheCoords = null;
     }
 
     Slip.prototype.start = function(fn) {
