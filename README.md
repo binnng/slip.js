@@ -3,11 +3,10 @@ slip.js
 
 移动端跟随手指滑动组件，零依赖。
 
-## 文档
-
-### 完整demo
+### 示例
 
 ```javascript
+	var ele = document.getElementById("slip");
 	var mySlip = Slip(ele, "xy");
 
 	mySlip.setCoord({
@@ -28,8 +27,13 @@ slip.js
 		.end(function() {
 			console.log('end');
 			cosole.log(this.coord);
+			
+			// 滑动方向
+			console.log(this.orient);
 		});
 ```
+
+## 文档
 
 ### 使用
 
@@ -85,6 +89,22 @@ slip.destroy();
 
 ###### 参数
 * `fn`: *Function* 触碰结束的回调
+
+#### 属性
+
+##### `coord`
+*Object* 元素的坐标值
+
+* `coord.x`: x坐标值
+* `coord.y`: y坐标值
+
+##### `orient`
+手指滑动的方向
+*Array*
+
+**注意：`orient`的值是数组**
+* 左滑: `['left']`
+* 右上滑: `['right', 'up']`
 
 ### 源码
 源码用`CoffeeScript`书写，`slip.js`为其生成代码。

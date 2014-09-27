@@ -18,6 +18,11 @@
   Y = "y"
   XY = "xy"
 
+  LEFT = "left"
+  RIGHT = "right"
+  UP = "up"
+  DOWN = "down"
+
   noop = ->
 
   ###
@@ -33,7 +38,6 @@
       ele.style[name] = "translate3d(#{x or 0}px, #{y or 0}px, #{z or 0}px)"
 
 
-  # 核心的slip，接受一个原生的DOM元素
   class Slip
 
     # 获取事件触发距离
@@ -53,9 +57,15 @@
       @onStart = @onMove = @onEnd = noop
       
       # coord: 元素实际坐标值
-      # eventCoords: 事件的位移，用于在各种事件中传递
-      # chcheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
-      @coord = @eventCoords = @cacheCoords = null
+      # eventCoords: 手指的坐标，用于在各种事件中传递
+      # cacheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
+      # eventMove: 手指的位移
+      # absEventMove: 手指位移的绝对值
+      @coord = @eventCoords = @cacheCoords = @eventMove = @absEventMove = null
+
+      # 结束后手指滑动的方向
+      # 数组 ['left'], ['left', 'up']
+      @orient = []
 
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @
@@ -79,6 +89,9 @@
 
       @cacheCoords = @coord
 
+      # 清空手指位移
+      @eventMove = @absEventMove = null
+
       @onStart.apply @, [event]
 
     onTouchMove: (event) ->
@@ -91,19 +104,19 @@
       # 手指位移
       # 左滑 eventMove.x < 0 右滑 eventMove.x > 0
       # 上滑 eventMove.y < 0 下滑 eventMove.y > 0
-      eventMove = 
-        "x": moveCoords.x - @eventCoords.x
-        "y": moveCoords.y - @eventCoords.y
+      eventMove = @eventMove = 
+        x: moveCoords.x - @eventCoords.x
+        y: moveCoords.y - @eventCoords.y
 
       # 手指位移绝对值
-      absEventMove = 
-        "x": Math.abs eventMove[X]
-        "y": Math.abs eventMove[Y]
+      absEventMove = @absEventMove = 
+        x: Math.abs eventMove.x
+        y: Math.abs eventMove.y
 
       # 元素位移
       eleMove = @coord = 
-        "x": if direction.indexOf(X) < 0 then @cacheCoords[X] else @cacheCoords[X] - 0 + eventMove[X]
-        "y": if direction.indexOf(Y) < 0 then @cacheCoords[Y] else @cacheCoords[Y] - 0 + eventMove[Y]
+        "x": if direction.indexOf(X) < 0 then @cacheCoords[X] else @cacheCoords[X] - 0 + eventMove.x
+        "y": if direction.indexOf(Y) < 0 then @cacheCoords[Y] else @cacheCoords[Y] - 0 + eventMove.y
 
       # 单方向滑动时，小于正方向最小距离，大于反方向最大距离，不是正确的手指行为
       if direction isnt XY
@@ -126,11 +139,19 @@
     onTouchEnd: (event) ->
       ele = @ele
 
-      ###
-      @coord = 
-        "x": ele.getAttribute(X) - 0
-        "y": ele.getAttribute(Y) - 0
-      ###
+      defaultMove = "x": 0, "y":0
+      
+      eventMove = @eventMove or defaultMove
+      absEventMove = @absEventMove or defaultMove
+
+      orient = []
+      if absEventMove.x > MIN_ALLOW_DISTANCE
+        orient.push if eventMove.x < 0 then LEFT else RIGHT
+
+      if absEventMove.y > MIN_ALLOW_DISTANCE
+        orient.push if eventMove.y < 0 then UP else DOWN
+
+      @orient = orient
 
       @onEnd.apply @, [event]
 
