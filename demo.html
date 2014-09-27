@@ -1,0 +1,64 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style type="text/css">
+	body{
+		margin: 0;
+		padding: 0;
+	}
+	#slip{
+		width: 100%;
+		height: 80px;
+		line-height: 80px;
+		background: #f33;
+		color: #fff;
+		text-align: center;
+	}
+
+	#slip.anim{
+		-webkit-transition: all .2s ease;
+		transition: all .2s ease;
+	}
+</style>
+<div id="slip">
+	slip.js，不依赖任何库的跟随手指滑动组件
+</div>
+
+<script type="text/javascript">
+	var ele = document.getElementById("slip");
+</script>
+<script type="text/javascript" src="slip.js"></script>
+<script type="text/javascript" src="http://cdn.staticfile.org/zepto/1.0rc1/zepto.min.js"></script>
+<script type="text/javascript">
+	var slip = Slip(ele, "xy");
+
+	var initCoord = {
+		x: 0,
+		y: 120
+	};
+
+	slip.setCoord(initCoord)
+	.start(function(event) {
+		$(this.ele).removeClass('anim')
+	})
+	.move(function(event) {
+		console.log(this.coord);
+	})
+	.end(function() {
+		var x = Math.abs(this.coord.x);
+		var y = Math.abs(this.coord.y);
+
+		if (x < 60 || y < 60) {
+			$(this.ele).addClass('anim').css({
+				"-webkit-transform": "translate3d(" + initCoord.x + "px ," + initCoord.y + "px ,0)",
+				"transform": "translate3d(" + initCoord.x + "px ," + initCoord.y + "px ,0)"
+			});
+
+			this.setCoord(initCoord);
+		} else {
+			initCoord = {
+				x: this.coord.x,
+				y: this.coord.y
+			};
+		}
+	});
+
+</script>
