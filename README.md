@@ -109,8 +109,15 @@ slip.destroy();
 *Array* 手指滑动的方向，这个值会在手指滑动过程中变化
 
 **注意：`orient`的值是数组**
+
 * 左滑: `['left']`
+* 右滑: `['right']`
+* 上滑: `['up']`
+* 下滑: `['down']`
+* 左上滑: `['left', 'up']`
 * 右上滑: `['right', 'up']`
+* 右下滑: `['right', 'down']`
+* 左下滑: `['left', 'down']`
 
 ### 源码
 源码用`CoffeeScript`书写，`slip.js`为其生成代码。
