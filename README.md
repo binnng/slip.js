@@ -5,6 +5,32 @@ slip.js
 
 ## 文档
 
+### 完整demo
+
+```javascript
+	var mySlip = Slip(ele, "xy");
+
+	mySlip.setCoord({
+		x: 0,
+		y: 120
+	})
+		.start(function(event) {
+			console.log('start');
+
+			// 事件对象
+			cossole.log(event);
+			// 当前坐标值
+			cossole.log(this.coord);
+		})
+		.move(function(event) {
+			console.log('move');
+		})
+		.end(function() {
+			console.log('end');
+			cosole.log(this.coord);
+		});
+```
+
 ### 使用
 
 window下暴露了名为 `Slip` 的全局函数。
@@ -22,7 +48,7 @@ var slip = Slip(el, "x");
 #### 方法
 
 ##### `setCoord`
-设置元素偏移位置
+设置元素坐标位置
 
 ###### 参数
 * `coord`: *Object*, 元素坐标位置
