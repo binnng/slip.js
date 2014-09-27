@@ -1,4 +1,5 @@
-((WIN, DOC) ->
+### ! CopyRight: binnng http://github.com/binnng/slip.js, Licensed under: MIT ###
+;((win, doc) ->
 
   # 滑动方向中最小允许距离
   MIN_ALLOW_DISTANCE = 10
@@ -59,9 +60,9 @@
       # coord: 元素实际坐标值
       # eventCoords: 手指的坐标，用于在各种事件中传递
       # cacheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
-      # eventMove: 手指的位移
-      # absEventMove: 手指位移的绝对值
-      @coord = @eventCoords = @cacheCoords = @eventMove = @absEventMove = null
+      # finger: 手指的位移
+      # absFinger: 手指位移的绝对值
+      @coord = @eventCoords = @cacheCoords = @finger = @absFinger = null
 
       # 结束后手指滑动的方向
       # 数组 ['left'], ['left', 'up']
@@ -90,9 +91,9 @@
       @cacheCoords = @coord
 
       # 清空手指位移
-      @eventMove = @absEventMove = null
+      @finger = @absFinger = null
 
-      @onStart.apply @, [event]
+      ret = @onStart.apply @, [event]
 
     onTouchMove: (event) ->
       event.preventDefault()
@@ -102,58 +103,58 @@
       direction = @direction
 
       # 手指位移
-      # 左滑 eventMove.x < 0 右滑 eventMove.x > 0
-      # 上滑 eventMove.y < 0 下滑 eventMove.y > 0
-      eventMove = @eventMove = 
+      # 左滑 finger.x < 0 右滑 finger.x > 0
+      # 上滑 finger.y < 0 下滑 finger.y > 0
+      finger = @finger = 
         x: moveCoords.x - @eventCoords.x
         y: moveCoords.y - @eventCoords.y
 
       # 手指位移绝对值
-      absEventMove = @absEventMove = 
-        x: Math.abs eventMove.x
-        y: Math.abs eventMove.y
-
-      # 元素位移
-      eleMove = @coord = 
-        "x": if direction.indexOf(X) < 0 then @cacheCoords[X] else @cacheCoords[X] - 0 + eventMove.x
-        "y": if direction.indexOf(Y) < 0 then @cacheCoords[Y] else @cacheCoords[Y] - 0 + eventMove.y
+      absFinger = @absFinger = 
+        x: Math.abs finger.x
+        y: Math.abs finger.y
 
       # 单方向滑动时，小于正方向最小距离，大于反方向最大距离，不是正确的手指行为
       if direction isnt XY
         # 反方向
         oppDirection = if direction is X then Y else X
 
-        if absEventMove[direction] < MIN_ALLOW_DISTANCE or absEventMove[oppDirection] > MAX_OPP_ALLOW_DISTANCE
+        if absFinger[direction] < MIN_ALLOW_DISTANCE or absFinger[oppDirection] > MAX_OPP_ALLOW_DISTANCE
           return no
 
+      # 手指移动方向
+      orient = []
+      if absFinger.x > MIN_ALLOW_DISTANCE
+        orient.push if finger.x < 0 then LEFT else RIGHT
+
+      if absFinger.y > MIN_ALLOW_DISTANCE
+        orient.push if finger.y < 0 then UP else DOWN
+
+      @orient = orient
+
+      # 用户返回，如果false，那就不继续了
+      ret = @onMove.apply @, [event]
+
+      return no if ret is no
+
+      
+
       ele = @ele
+
+      # 元素位移
+      eleMove = @coord = 
+        "x": if direction.indexOf(X) < 0 then @cacheCoords[X] else @cacheCoords[X] - 0 + finger.x
+        "y": if direction.indexOf(Y) < 0 then @cacheCoords[Y] else @cacheCoords[Y] - 0 + finger.y
 
       setTranslate ele, eleMove[X], eleMove[Y]
 
       # 在元素上标记位移
       ele.setAttribute attr, eleMove[attr] for attr of eleMove
 
-      @onMove.apply @, [event]
-
-
     onTouchEnd: (event) ->
       ele = @ele
 
-      defaultMove = "x": 0, "y":0
-      
-      eventMove = @eventMove or defaultMove
-      absEventMove = @absEventMove or defaultMove
-
-      orient = []
-      if absEventMove.x > MIN_ALLOW_DISTANCE
-        orient.push if eventMove.x < 0 then LEFT else RIGHT
-
-      if absEventMove.y > MIN_ALLOW_DISTANCE
-        orient.push if eventMove.y < 0 then UP else DOWN
-
-      @orient = orient
-
-      @onEnd.apply @, [event]
+      ret = @onEnd.apply @, [event]
 
 
     # 初始化
@@ -196,6 +197,6 @@
     instance = new Slip ele, direction or X
     instance.init()
 
-  WIN.Slip = slip
+  win.Slip = slip
 
 ) window, document

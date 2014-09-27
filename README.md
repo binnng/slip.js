@@ -98,9 +98,15 @@ slip.destroy();
 * `coord.x`: x坐标值
 * `coord.y`: y坐标值
 
+##### `finger`
+*Object* 手指的偏移
+
+* `finger.x`: x偏移值
+* `finger.y`: y偏移值
+
+
 ##### `orient`
-手指滑动的方向
-*Array*
+*Array* 手指滑动的方向，这个值会在手指滑动过程中变化
 
 **注意：`orient`的值是数组**
 * 左滑: `['left']`
