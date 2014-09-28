@@ -18,16 +18,20 @@
 			}
 			html,
 			body,
-			.container,
-			.page{
+			.container{
 				height: 100%;
 				overflow: hidden;
 			}
 			#wrap{
 				height: 400%;
 			}
+			#wrap.anim{
+				-webkit-transition: all .3s ease-in;
+				transition: all .3s ease-in;
+			}
 			.page{
-				background-size: 25%;
+				background-size: 100%;
+				height: 25%;
 				background-repeat: no-repeat;
 				background-position: center center;
 			}
@@ -44,7 +48,19 @@
 	</body>
 	<script type="text/javascript">
 		var wrap = document.getElementById('wrap');
-		var slip = Slip(wrap, 'y');
+		var page = 0;
+		var slip = Slip(wrap, 'y')
+			.setCoord({x: 0, y: 0})
+			.end(function(event) {
+				var orient = this.orient.join('');
+
+				if (orient.indexOf('up') > -1) {
+					
+				}
+				if (orient.indexOf('down') > -1) {
+					
+				}
+			});
 		var html = [];
 
 		for (var i = 1; i < 5; i++) {
