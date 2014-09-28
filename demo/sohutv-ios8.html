@@ -29,15 +29,45 @@
 				background-size: 100%;
 				background-repeat: no-repeat;
 				background-position: center center;
+				position: relative;
 			}
 			.page-1{
 				background-size: 50%;
 				background-position: center 30%;
 			}
+
+			b{
+				position: absolute;
+				bottom: 15px;
+				left: 0;
+				right: 0;
+				height: 15px;
+				opacity: .4;
+				-webkit-animation: arrow .3s;
+			}
+
+
+			b:before, b:after {
+				content: "";
+				display: block;
+				background: #000;
+				width: 2px;
+				height: 14px;
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				-webkit-transform: rotate(-55deg);
+				-webkit-transform-origin: 100% 100%;
+			}
+			b:after {
+				-webkit-transform: rotate(55deg);
+				-webkit-transform-origin: 0 100%;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="container">
+			<img src="../images/sohutv-ios8/1.jpg" style="display:none">
 			<div id="wrap"></div>
 		</div>
 	</body>
@@ -95,7 +125,7 @@
 		for (var i = 1; i < total + 1; i++) {
 			var _i = i === 5 ? 1 : i;
 
-			html.push('<div class="page page-' + _i + '" style="height:' + h + 'px;background-image:url(../images/sohutv-ios8/' + _i + '.jpg)"></div>');
+			html.push('<div class="page page-' + _i + '" style="height:' + h + 'px;background-image:url(../images/sohutv-ios8/' + _i + '.jpg)">' + (_i == 1 ? '<b></b>' : '') + '</div>');
 		}
 
 		wrap.innerHTML = html.join('');
