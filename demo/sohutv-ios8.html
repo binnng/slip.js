@@ -80,6 +80,8 @@
 
 		var h = window.innerHeight;
 
+		var init = false;
+
 		wrap.style.height = h * total + "px";
 		container.style.height = h + "px";
 
@@ -100,6 +102,11 @@
 					if (page == total) page = total - 1;
 
 					trans = - page * h;
+
+					if (!init) {
+						document.getElementsByTagName('b')[0].style.display = 'none';
+						init = true;
+					}
 
 				}
 				if (orient.indexOf('down') > -1) {
