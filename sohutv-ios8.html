@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>搜狐视频客户端完美适配iOS8</title>
+		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="min.slip.js"></script>
+		<style type="text/css">
+			body{
+				background-color: #f2f4f5;
+				margin: 0;
+				padding: 0;
+			}
+			html,
+			body,
+			.container,
+			.page{
+				height: 100%;
+				overflow: hidden;
+			}
+			#wrap{
+				height: 400%;
+			}
+			.page{
+				background-size: 25%;
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+			.page-1{
+				background-size: 50%;
+				background-position: center 30%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div id="wrap"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var wrap = document.getElementById('wrap');
+		var slip = Slip(wrap, 'y');
+		var html = [];
+
+		for (var i = 1; i < 5; i++) {
+			html.push('<div class="page page-' + i + '" style="background-image:url(images/sohutv-ios8/' + i + '.jpg)"></div>');
+		}
+
+		wrap.innerHTML = html.join('');
+	</script>
+</html>
