@@ -133,7 +133,7 @@
 		for (var i = 1; i < total + 1; i++) {
 			var _i = i === 5 ? 1 : i;
 
-			html.push('<div class="page page-' + _i + '" style="height:' + h + 'px;background-image:url(../images/sohutv-ios8/' + _i + '.jpg)">' + (_i == 1 ? '<b></b>' : '') + '</div>');
+			html.push('<div class="page page-' + _i + '" style="height:' + h + 'px;background-image:url(../images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
 		}
 
 		wrap.innerHTML = html.join('');
