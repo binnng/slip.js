@@ -55,7 +55,8 @@
 				var orient = this.orient.join('');
 
 				if (orient.indexOf('up') > -1) {
-					
+					wrap.className = 'anim';
+					wrap.style.webkitTransform = 'translate3d(0, ' + page + '00%, 0)';
 				}
 				if (orient.indexOf('down') > -1) {
 					
