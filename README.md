@@ -5,6 +5,16 @@ slip.js
 
 ### 示例
 
+手机访问：
+
+[搜狐视频客户端完美适配iOS8](http://binnng.github.io/slip.js/demo/sohutv-ios8.html)
+
+或扫描二维码访问：
+
+![搜狐视频客户端完美适配iOS8](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ios8.html&size=6)
+
+### 简单代码
+
 ```javascript
 	var ele = document.getElementById("slip");
 	var mySlip = Slip(ele, "xy");
