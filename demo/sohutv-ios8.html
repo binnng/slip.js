@@ -21,7 +21,8 @@
 			}
 			#wrap{
 			}
-			#wrap.anim{
+			#wrap.anim,
+			b{
 				-webkit-transition: all .4s ease-in;
 				transition: all .4s ease-in;
 			}
@@ -104,7 +105,7 @@
 					trans = - page * h;
 
 					if (!init) {
-						document.getElementsByTagName('b')[0].style.display = 'none';
+						document.getElementsByTagName('b')[0].style.opacity = '0';
 						init = true;
 					}
 
