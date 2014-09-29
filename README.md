@@ -56,9 +56,9 @@ Slip(ele, "x").slider()
       console.log('start');
 
       // 事件对象
-      cossole.log(event);
+      console.log(event);
       // 当前坐标值
-      cossole.log(this.coord);
+      console.log(this.coord);
     })
     .move(function(event) {
       console.log('move');
