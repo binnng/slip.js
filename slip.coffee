@@ -109,6 +109,9 @@
       # 数组 ['left'], ['left', 'up']
       @orient = []
 
+      # slider
+      @isSlider = no
+
       # webapp当前页
       # 只有设置webapp才有值
       @isWebapp = no
@@ -138,7 +141,7 @@
       # 清空手指位移
       @finger = @absFinger = NULL
 
-      @onWepappStart event if @isWebapp
+      @onSliderStart event if @isSlider
       ret = @onStart.apply @, [event]
 
     onTouchMove: (event) ->
@@ -198,7 +201,7 @@
     onTouchEnd: (event) ->
       ele = @ele
 
-      @onWepappEnd event if @isWebapp
+      @onSliderEnd event if @isSlider
       ret = @onEnd.apply @, [event]
 
       # 设置一次translate
@@ -206,10 +209,10 @@
       trans = getTranslate this.ele
       this.setCoord trans if trans
 
-    onWepappStart: (event) ->
+    onSliderStart: (event) ->
       setTransition @ele, NULL
 
-    onWepappEnd: (event) ->
+    onSliderEnd: (event) ->
       orient = @orient.join ""
       css = ""
       trans = 0
@@ -223,7 +226,7 @@
       isLeft = orient.indexOf(LEFT) > -1
       isRight = orient.indexOf(RIGHT) > -1
 
-      # 是不是垂直滑动的webapp
+      # 是不是垂直滑动
       isVerticalWebapp = @direction is Y
 
       if isVerticalWebapp
@@ -240,10 +243,10 @@
       setTransition ele, "all .4s ease-in"
 
       if isVerticalWebapp
-        trans = "-#{page * WINDOW_HEIGHT}"
+        trans = "-#{page * @pageHeight}"
         setTranslate ele, 0, trans, 0
       else
-        trans = "-#{page * WINDOW_WIDTH}"
+        trans = "-#{page * @pageWidth}"
         setTranslate ele, trans, 0, 0
 
       @page = page
@@ -282,57 +285,104 @@
 
       @
 
-    # webapp
-    webapp: (elPages) ->
-      ele = this.ele
+    # 设置是个普通的轮播器
+    slider: (elPages)->
+      ele = @ele
 
       # 如果传入了选择器
       if typeof elPages is "string"
         elPages = ele.querySelectorAll(elPages)
-      else
-        # 传入为空或者元素列表
-        elPages = elPages or ele.childNodes
+      
+      # 传入为空
+      else if not elPages
+        elPages = []
+        elChilds = ele.childNodes
 
-      @isWebapp = yes
+        for elChild in elChilds
+          elPages.push elChild if elChild.nodeType is 1
+
+      @isSlider = yes
       @page = 0
       @elPages = elPages
 
       elPagesLen = elPages.length
       pageNum = @pageNum = if elPagesLen then elPagesLen else 0
 
-      if pageNum > 0
-        ele.style.height = "#{WINDOW_HEIGHT * pageNum}px"
-        elPage.style.height = "#{WINDOW_HEIGHT}px" for elPage in elPages
+      # 横向滑动
+      if @direction is X
+        elPage.style.cssFloat = LEFT for elPage in elPages
 
-        # 横向滑动的webapp
-        if @direction is X
-          ele.style.width = "#{WINDOW_WIDTH * pageNum}px"
-          for elPage in elPages
-            elPage.style.width = "#{WINDOW_WIDTH}px"
-            elPage.style.cssFloat = LEFT
+      @
+
+    # webapp
+    webapp: (elPages) ->
+      @isWebapp = yes
 
       # 如果是webapp肯定全屏
-      @fullscreen()
+      @.slider(elPages).fullscreen()
+
+      elPages = @elPages
+      ele = @ele
+      pageNum = @pageNum
+
+      ele.style.height = "#{WINDOW_HEIGHT * pageNum}px"
+      @height WINDOW_HEIGHT
+
+      # 横向滑动的webapp
+      @width WINDOW_WIDTH if @direction is X
+      
+      @
+
+    height: (num)->
+      ele = @ele
+      elPages = @elPages
+      pageNum = @pageNum
+      num = String(num).replace "px", ""
+
+      if num is "100%"
+        num = WINDOW_HEIGHT
+
+      @pageHeight = num
+
+      if @direction is X
+        ele.style.height = "#{num}px"
+
+      elPage.style.height = "#{num}px" for elPage in elPages
+
+      @
+
+    width: (num)->
+      ele = @ele
+      elPages = @elPages
+      pageNum = @pageNum
+      num = String(num).replace "px", ""
+
+      if num is "100%"
+        num = WINDOW_WIDTH
+
+      @pageWidth = num
+
+      if @direction is X
+        ele.style.width = "#{num * pageNum}px"
+
+      elPage.style.width = "#{num}px" for elPage in elPages
 
       @
 
     fullscreen: ->
 
-      if @isWebapp
-        ele = @ele
-        child = ele
+      ele = @ele
+      child = ele
 
-        while parent = child.parentNode
+      while parent = child.parentNode
 
-          if parent.nodeType is 1
-            parent.style.height = "100%"
-            parent.style.overflow = "hidden"
+        if parent.nodeType is 1
+          parent.style.height = "100%"
+          parent.style.overflow = "hidden"
 
-          child = parent
+        child = parent
 
       @
-
-
 
   slip = (ele, direction) ->
     instance = new Slip ele, direction or X

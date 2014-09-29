@@ -90,6 +90,7 @@
       this.onStart = this.onMove = this.onEnd = noop;
       this.coord = this.eventCoords = this.cacheCoords = this.finger = this.absFinger = NULL;
       this.orient = [];
+      this.isSlider = false;
       this.isWebapp = false;
     }
 
@@ -124,8 +125,8 @@
       this.eventCoords = getCoordinates(event);
       this.cacheCoords = this.coord;
       this.finger = this.absFinger = NULL;
-      if (this.isWebapp) {
-        this.onWepappStart(event);
+      if (this.isSlider) {
+        this.onSliderStart(event);
       }
       return ret = this.onStart.apply(this, [event]);
     };
@@ -177,8 +178,8 @@
     Slip.prototype.onTouchEnd = function(event) {
       var ele, ret, trans;
       ele = this.ele;
-      if (this.isWebapp) {
-        this.onWepappEnd(event);
+      if (this.isSlider) {
+        this.onSliderEnd(event);
       }
       ret = this.onEnd.apply(this, [event]);
       trans = getTranslate(this.ele);
@@ -187,11 +188,11 @@
       }
     };
 
-    Slip.prototype.onWepappStart = function(event) {
+    Slip.prototype.onSliderStart = function(event) {
       return setTransition(this.ele, NULL);
     };
 
-    Slip.prototype.onWepappEnd = function(event) {
+    Slip.prototype.onSliderEnd = function(event) {
       var css, ele, isDown, isLeft, isRight, isUp, isVerticalWebapp, orient, page, pageNum, trans;
       orient = this.orient.join("");
       css = "";
@@ -227,10 +228,10 @@
       }
       setTransition(ele, "all .4s ease-in");
       if (isVerticalWebapp) {
-        trans = "-" + (page * WINDOW_HEIGHT);
+        trans = "-" + (page * this.pageHeight);
         setTranslate(ele, 0, trans, 0);
       } else {
-        trans = "-" + (page * WINDOW_WIDTH);
+        trans = "-" + (page * this.pageWidth);
         setTranslate(ele, trans, 0, 0);
       }
       return this.page = page;
@@ -282,50 +283,100 @@
       return this;
     };
 
-    Slip.prototype.webapp = function(elPages) {
-      var elPage, elPagesLen, ele, pageNum, _i, _j, _len, _len1;
+    Slip.prototype.slider = function(elPages) {
+      var elChild, elChilds, elPage, elPagesLen, ele, pageNum, _i, _j, _len, _len1;
       ele = this.ele;
       if (typeof elPages === "string") {
         elPages = ele.querySelectorAll(elPages);
-      } else {
-        elPages = elPages || ele.childNodes;
+      } else if (!elPages) {
+        elPages = [];
+        elChilds = ele.childNodes;
+        for (_i = 0, _len = elChilds.length; _i < _len; _i++) {
+          elChild = elChilds[_i];
+          if (elChild.nodeType === 1) {
+            elPages.push(elChild);
+          }
+        }
       }
-      this.isWebapp = true;
+      this.isSlider = true;
       this.page = 0;
       this.elPages = elPages;
       elPagesLen = elPages.length;
       pageNum = this.pageNum = elPagesLen ? elPagesLen : 0;
-      if (pageNum > 0) {
-        ele.style.height = "" + (WINDOW_HEIGHT * pageNum) + "px";
-        for (_i = 0, _len = elPages.length; _i < _len; _i++) {
-          elPage = elPages[_i];
-          elPage.style.height = "" + WINDOW_HEIGHT + "px";
-        }
-        if (this.direction === X) {
-          ele.style.width = "" + (WINDOW_WIDTH * pageNum) + "px";
-          for (_j = 0, _len1 = elPages.length; _j < _len1; _j++) {
-            elPage = elPages[_j];
-            elPage.style.width = "" + WINDOW_WIDTH + "px";
-            elPage.style.cssFloat = LEFT;
-          }
+      if (this.direction === X) {
+        for (_j = 0, _len1 = elPages.length; _j < _len1; _j++) {
+          elPage = elPages[_j];
+          elPage.style.cssFloat = LEFT;
         }
       }
-      this.fullscreen();
+      return this;
+    };
+
+    Slip.prototype.webapp = function(elPages) {
+      var ele, pageNum;
+      this.isWebapp = true;
+      this.slider(elPages).fullscreen();
+      elPages = this.elPages;
+      ele = this.ele;
+      pageNum = this.pageNum;
+      ele.style.height = "" + (WINDOW_HEIGHT * pageNum) + "px";
+      this.height(WINDOW_HEIGHT);
+      if (this.direction === X) {
+        this.width(WINDOW_WIDTH);
+      }
+      return this;
+    };
+
+    Slip.prototype.height = function(num) {
+      var elPage, elPages, ele, pageNum, _i, _len;
+      ele = this.ele;
+      elPages = this.elPages;
+      pageNum = this.pageNum;
+      num = String(num).replace("px", "");
+      if (num === "100%") {
+        num = WINDOW_HEIGHT;
+      }
+      this.pageHeight = num;
+      if (this.direction === X) {
+        ele.style.height = "" + num + "px";
+      }
+      for (_i = 0, _len = elPages.length; _i < _len; _i++) {
+        elPage = elPages[_i];
+        elPage.style.height = "" + num + "px";
+      }
+      return this;
+    };
+
+    Slip.prototype.width = function(num) {
+      var elPage, elPages, ele, pageNum, _i, _len;
+      ele = this.ele;
+      elPages = this.elPages;
+      pageNum = this.pageNum;
+      num = String(num).replace("px", "");
+      if (num === "100%") {
+        num = WINDOW_WIDTH;
+      }
+      this.pageWidth = num;
+      if (this.direction === X) {
+        ele.style.width = "" + (num * pageNum) + "px";
+      }
+      for (_i = 0, _len = elPages.length; _i < _len; _i++) {
+        elPage = elPages[_i];
+        elPage.style.width = "" + num + "px";
+      }
       return this;
     };
 
     Slip.prototype.fullscreen = function() {
       var child, ele, parent;
-      if (this.isWebapp) {
-        ele = this.ele;
-        child = ele;
-        while (parent = child.parentNode) {
-          if (parent.nodeType === 1) {
-            parent.style.height = "100%";
-            parent.style.overflow = "hidden";
-          }
-          child = parent;
+      ele = this.ele;
+      child = ele;
+      while (parent = child.parentNode) {
+        if (parent.nodeType === 1) {
+          parent.style.height = "100%";
+          parent.style.overflow = "hidden";
         }
+        child = parent;
       }
       return this;
     };

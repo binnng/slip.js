@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>匆匆那年</title>
+		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="../slip.js"></script>
+		<style type="text/css">
+			body{
+				background-color: #f2f4f5;
+				margin: 0;
+				padding: 0;
+			}
+
+			#container{
+				overflow: hidden;
+			}
+
+			.page{
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center center;
+				position: relative;
+			}
+
+			b{
+				position: absolute;
+				right: 15px;
+				top: 50%;
+				bottom: 0;
+				height: 15px;
+				opacity: .4;
+				-webkit-transition: all .4s ease-in;
+				transition: all .4s ease-in;
+			}
+
+			.text{
+				padding: 20px 40px;
+			}
+
+			.text em{
+				color: red;
+				font-weight: 700;
+				font-size: 2em;
+				font-style: normal;
+				line-height: 2;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="wrap">
+				<div class="page" style="background-image: url(images/sohutv-ccnn/1.jpg)"></div>
+				<div class="page" style="background-image: url(images/sohutv-ccnn/2.jpg)"></div>
+				<div class="page" style="background-image: url(images/sohutv-ccnn/3.jpg)"></div>
+				<div class="page" style="background-image: url(images/sohutv-ccnn/4.jpg)"></div>
+				<div class="page" style="background-image: url(images/sohutv-ccnn/5.jpg)"></div>
+			</div>
+		</div>
+
+		<p class="text">
+			<em>人生</em><br>
+			就像小浣熊干脆面<br>
+			越捏越脆...
+		</p>
+	</body>
+	<script type="text/javascript">
+		var wrap = document.getElementById('wrap');
+		var slip = Slip(wrap, 'x')
+			.slider()
+			.width('100%')
+			.height(200);
+
+	</script>
+</html>
