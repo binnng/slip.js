@@ -192,7 +192,7 @@
     };
 
     Slip.prototype.onWepappEnd = function(event) {
-      var css, ele, isDown, isLeft, isRight, isUp, isValidGesture, isVerticalWebapp, orient, page, pageNum, trans;
+      var css, ele, isDown, isLeft, isRight, isUp, isVerticalWebapp, orient, page, pageNum, trans;
       orient = this.orient.join("");
       css = "";
       trans = 0;
@@ -204,30 +204,36 @@
       isLeft = orient.indexOf(LEFT) > -1;
       isRight = orient.indexOf(RIGHT) > -1;
       isVerticalWebapp = this.direction === Y;
-      isValidGesture = (isVerticalWebapp && (isUp || isDown)) || (!isVerticalWebapp && (isLeft || isRight));
-      if (isValidGesture) {
-        if (isUp || isLeft) {
+      if (isVerticalWebapp) {
+        if (isUp) {
           page++;
         }
-        if (isDown || isRight) {
+        if (isDown) {
           page--;
         }
-        if (page === pageNum) {
-          page = pageNum - 1;
+      } else {
+        if (isLeft) {
+          page++;
         }
-        if (page === -1) {
-          page = 0;
+        if (isRight) {
+          page--;
         }
-        setTransition(ele, "all .4s ease-in");
-        if (isVerticalWebapp) {
-          trans = "-" + (page * WINDOW_HEIGHT);
-          setTranslate(ele, 0, trans, 0);
-        } else {
-          trans = "-" + (page * WINDOW_WIDTH);
-          setTranslate(ele, trans, 0, 0);
-        }
-        return this.page = page;
       }
+      if (page === pageNum) {
+        page = pageNum - 1;
+      }
+      if (page === -1) {
+        page = 0;
+      }
+      setTransition(ele, "all .4s ease-in");
+      if (isVerticalWebapp) {
+        trans = "-" + (page * WINDOW_HEIGHT);
+        setTranslate(ele, 0, trans, 0);
+      } else {
+        trans = "-" + (page * WINDOW_WIDTH);
+        setTranslate(ele, trans, 0, 0);
+      }
+      return this.page = page;
     };
 
     Slip.prototype.init = function() {

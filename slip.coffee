@@ -226,28 +226,27 @@
       # 是不是垂直滑动的webapp
       isVerticalWebapp = @direction is Y
 
-      # 是不是有效的手指运动
-      isValidGesture = (isVerticalWebapp and (isUp or isDown)) or (not isVerticalWebapp and (isLeft or isRight))
+      if isVerticalWebapp
+        page++ if isUp
+        page-- if isDown
+      else 
+        page++ if isLeft
+        page-- if isRight
 
-      if isValidGesture
+      # 归位超出
+      page = pageNum - 1  if page is pageNum
+      page = 0  if page is -1
 
-        page++ if isUp or isLeft
-        page-- if isDown or isRight
+      setTransition ele, "all .4s ease-in"
 
-        # 归位超出
-        page = pageNum - 1  if page is pageNum
-        page = 0  if page is -1
+      if isVerticalWebapp
+        trans = "-#{page * WINDOW_HEIGHT}"
+        setTranslate ele, 0, trans, 0
+      else
+        trans = "-#{page * WINDOW_WIDTH}"
+        setTranslate ele, trans, 0, 0
 
-        setTransition ele, "all .4s ease-in"
-
-        if isVerticalWebapp
-          trans = "-#{page * WINDOW_HEIGHT}"
-          setTranslate ele, 0, trans, 0
-        else
-          trans = "-#{page * WINDOW_WIDTH}"
-          setTranslate ele, trans, 0, 0
-
-        @page = page
+      @page = page
 
     # 初始化
     init: -> 
