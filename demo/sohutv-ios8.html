@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,23 +8,20 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>搜狐视频客户端完美适配iOS8</title>
 		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
-		<script type="text/javascript" src="../min.slip.js"></script>
+		<script type="text/javascript" src="../slip.js"></script>
 		<style type="text/css">
 			body{
 				background-color: #f2f4f5;
 				margin: 0;
 				padding: 0;
 			}
+			html,
+			body,
 			#container{
+				height: 100%;
 				overflow: hidden;
 			}
-			#wrap{
-			}
-			#wrap.anim,
-			b{
-				-webkit-transition: all .4s ease-in;
-				transition: all .4s ease-in;
-			}
+
 			.page{
 				background-size: 100%;
 				background-repeat: no-repeat;
@@ -44,7 +40,8 @@
 				right: 0;
 				height: 15px;
 				opacity: .4;
-				-webkit-animation: arrow .3s;
+				-webkit-transition: all .4s ease-in;
+				transition: all .4s ease-in;
 			}
 
 
@@ -77,65 +74,30 @@
 		var container = document.getElementById('container');
 
 		var total = 5;
-		var page = 0;
-
-		var h = window.innerHeight;
-
 		var init = false;
 
-		wrap.style.height = h * total + "px";
-		container.style.height = h + "px";
-
-		var slip = Slip(wrap, 'y')
-			.setCoord({x: 0, y: 0})
-			.start(function() {
-				wrap.className = '';
-			})
-			.end(function(event) {
-				var orient = this.orient.join('');
-				var css = '';
-
-				var trans = 0;
-
-				if (orient.indexOf('up') > -1) {
-					page++;
-
-					if (page == total) page = total - 1;
-
-					trans = - page * h;
-
-					if (!init) {
-						document.getElementsByTagName('b')[0].style.opacity = '0';
-						init = true;
-					}
-
-				}
-				if (orient.indexOf('down') > -1) {
-					page--;
-
-					if (page == -1) page = 0;
-
-					trans = - page * h;
-				}
-
-				if (orient.indexOf('up') > -1 || orient.indexOf('down') > -1) {
-					wrap.className = 'anim';
-
-					css = 'translate3d(0, ' + trans + 'px, 0)';
-					wrap.style.webkitTransform = wrap.style.transform = css;
-
-					this.setCoord({x: 0, y: trans});
-
-				}
-			});
 		var html = [];
 
 		for (var i = 1; i < total + 1; i++) {
 			var _i = i === 5 ? 1 : i;
 
-			html.push('<div class="page page-' + _i + '" style="height:' + h + 'px;background-image:url(../images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
+			html.push('<div class="page page-' + _i + '" style="background-image:url(../images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
 		}
 
 		wrap.innerHTML = html.join('');
+
+		var slip = Slip(wrap, 'y')
+			.end(function() {
+				var orient = this.orient.join('');
+
+				if (orient.indexOf('up') > -1) {
+					if (!init) {
+						document.getElementsByTagName('b')[0].style.opacity = '0';
+						init = true;
+					}
+				}
+			})
+			.webapp(document.querySelectorAll('.page'));
+
 	</script>
 </html>
