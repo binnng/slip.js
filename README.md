@@ -29,10 +29,10 @@ slip.js
 var ele = document.getElementById("slip");
 
 // 垂直滑动
-Slip(ele, "y").webaapp();
+Slip(ele, "y").webapp();
 
 // 水平滑动
-// Slip(ele, "x").webaapp();
+// Slip(ele, "x").webapp();
 ```
 一个可滑动的高度为200px的轮播器：
 ```javascript
@@ -65,7 +65,7 @@ Slip(ele, "x").slider()
     })
     .end(function() {
       console.log('end');
-      cosole.log(this.coord);
+      console.log(this.coord);
       
       // 滑动方向
       console.log(this.orient);
