@@ -188,6 +188,17 @@ Slip(ele, "x").slider().height(200);
 ##### 参数
 * `num`: *Number|String*, 宽度值，数字或者带有px的值。
 
+#### 属性
+
+##### `page`
+当前轮播器在第几页
+
+```javascript
+Slip(ele, 'x').end(function() {
+  console.log(this.page);
+});
+```
+
 ### Webapp 全屏网页
 如[搜狐视频客户端完美适配iOS8](http://binnng.github.io/slip.js/demo/sohutv-ios8.html)这种形式的网页。
 
