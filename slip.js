@@ -184,8 +184,9 @@
       ret = this.onEnd.apply(this, [event]);
       trans = getTranslate(this.ele);
       if (trans) {
-        return this.setCoord(trans);
+        this.setCoord(trans);
       }
+      return this.orient = [];
     };
 
     Slip.prototype.onSliderStart = function(event) {
