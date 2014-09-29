@@ -207,7 +207,9 @@
       # 设置一次translate
       # 防止用户改变了translate
       trans = getTranslate this.ele
-      this.setCoord trans if trans
+      @setCoord trans if trans
+
+      @orient = []
 
     onSliderStart: (event) ->
       setTransition @ele, NULL
