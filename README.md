@@ -13,9 +13,11 @@ slip.js
 或扫描二维码访问：
 
 搜狐视频客户端完美适配iOS8
+
 ![搜狐视频客户端完美适配iOS8](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ios8.html&size=6)
 
 匆匆那年
+
 ![匆匆那年](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ccnn.html&size=6)
 
 ### 简单代码
