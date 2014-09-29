@@ -15,12 +15,6 @@
 				margin: 0;
 				padding: 0;
 			}
-			html,
-			body,
-			#container{
-				height: 100%;
-				overflow: hidden;
-			}
 
 			.page{
 				background-size: 100%;
@@ -65,7 +59,6 @@
 	</head>
 	<body>
 		<div id="container">
-			<img src="../images/sohutv-ios8/1.jpg" style="display:none">
 			<div id="wrap"></div>
 		</div>
 	</body>
@@ -87,6 +80,7 @@
 		wrap.innerHTML = html.join('');
 
 		var slip = Slip(wrap, 'y')
+			.webapp()
 			.end(function() {
 				var orient = this.orient.join('');
 
@@ -96,8 +90,7 @@
 						init = true;
 					}
 				}
-			})
-			.webapp(document.querySelectorAll('.page'));
+			});
 
 	</script>
 </html>

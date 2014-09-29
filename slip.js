@@ -2,7 +2,7 @@
 
 /* ! CopyRight: binnng http://github.com/binnng/slip.js, Licensed under: MIT */
 (function(WIN, DOC) {
-  var CSS_PREFIX_MAP, DOWN, END_EVENT, IsTouch, LEFT, MAX_OPP_ALLOW_DISTANCE, MIN_ALLOW_DISTANCE, MOVE_EVENT, NULL, NUMBER_REG, RIGHT, START_EVENT, Slip, UNDEFINED, UP, WINDOW_HEIGHT, X, XY, Y, getTranslate, noop, setTransition, setTranslate, slip;
+  var CSS_PREFIX_MAP, DOWN, END_EVENT, IsTouch, LEFT, MAX_OPP_ALLOW_DISTANCE, MIN_ALLOW_DISTANCE, MOVE_EVENT, NULL, NUMBER_REG, RIGHT, START_EVENT, Slip, UNDEFINED, UP, WINDOW_HEIGHT, WINDOW_WIDTH, X, XY, Y, getTranslate, noop, setTransition, setTranslate, slip;
   UNDEFINED = void 0;
   NULL = null;
   MIN_ALLOW_DISTANCE = 10;
@@ -21,6 +21,7 @@
   MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove';
   END_EVENT = IsTouch ? 'touchend' : 'mouseup';
   WINDOW_HEIGHT = WIN['innerHeight'];
+  WINDOW_WIDTH = WIN['innerWidth'];
   noop = function() {};
   setTransition = function(ele, css) {
     var name, prefix, _i, _len, _results;
@@ -191,31 +192,40 @@
     };
 
     Slip.prototype.onWepappEnd = function(event) {
-      var css, ele, isDown, isUp, orient, page, pageNum, trans;
+      var css, ele, isDown, isLeft, isRight, isUp, isValidGesture, isVerticalWebapp, orient, page, pageNum, trans;
       orient = this.orient.join("");
       css = "";
       trans = 0;
       page = this.page;
       pageNum = this.pageNum;
       ele = this.ele;
-      isUp = orient.indexOf("up") > -1;
-      isDown = orient.indexOf("down") > -1;
-      if (isUp) {
-        page++;
-      }
-      if (isDown) {
-        page--;
-      }
-      if (isUp || isDown) {
+      isUp = orient.indexOf(UP) > -1;
+      isDown = orient.indexOf(DOWN) > -1;
+      isLeft = orient.indexOf(LEFT) > -1;
+      isRight = orient.indexOf(RIGHT) > -1;
+      isVerticalWebapp = this.direction === Y;
+      isValidGesture = (isVerticalWebapp && (isUp || isDown)) || (!isVerticalWebapp && (isLeft || isRight));
+      if (isValidGesture) {
+        if (isUp || isLeft) {
+          page++;
+        }
+        if (isDown || isRight) {
+          page--;
+        }
         if (page === pageNum) {
           page = pageNum - 1;
         }
         if (page === -1) {
           page = 0;
         }
-        trans = "-" + (page * WINDOW_HEIGHT);
         setTransition(ele, "all .4s ease-in");
-        setTranslate(ele, 0, trans, 0);
+        if (isVerticalWebapp) {
+          trans = "-" + (page * WINDOW_HEIGHT);
+          setTranslate(ele, 0, trans, 0);
+        } else {
+          trans = "-" + (page * WINDOW_WIDTH);
+          setTranslate(ele, trans, 0, 0);
+        }
         return this.page = page;
       }
     };
@@ -267,22 +277,51 @@
     };
 
     Slip.prototype.webapp = function(elPages) {
-      var elPage, elPagesLen, ele, pageNum, _i, _len, _results;
-      this.elPages = elPages;
+      var elPage, elPagesLen, ele, pageNum, _i, _j, _len, _len1;
+      ele = this.ele;
+      if (typeof elPages === "string") {
+        elPages = ele.querySelectorAll(elPages);
+      } else {
+        elPages = elPages || ele.childNodes;
+      }
       this.isWebapp = true;
       this.page = 0;
+      this.elPages = elPages;
       elPagesLen = elPages.length;
       pageNum = this.pageNum = elPagesLen ? elPagesLen : 0;
       if (pageNum > 0) {
-        ele = this.ele;
         ele.style.height = "" + (WINDOW_HEIGHT * pageNum) + "px";
-        _results = [];
         for (_i = 0, _len = elPages.length; _i < _len; _i++) {
           elPage = elPages[_i];
-          _results.push(elPage.style.height = "" + WINDOW_HEIGHT + "px");
+          elPage.style.height = "" + WINDOW_HEIGHT + "px";
         }
-        return _results;
+        if (this.direction === X) {
+          ele.style.width = "" + (WINDOW_WIDTH * pageNum) + "px";
+          for (_j = 0, _len1 = elPages.length; _j < _len1; _j++) {
+            elPage = elPages[_j];
+            elPage.style.width = "" + WINDOW_WIDTH + "px";
+            elPage.style.cssFloat = LEFT;
+          }
+        }
       }
+      this.fullscreen();
+      return this;
+    };
+
+    Slip.prototype.fullscreen = function() {
+      var child, ele, parent;
+      if (this.isWebapp) {
+        ele = this.ele;
+        child = ele;
+        while (parent = child.parentNode) {
+          if (parent.nodeType === 1) {
+            parent.style.height = "100%";
+            parent.style.overflow = "hidden";
+          }
+          child = parent;
+        }
+      }
+      return this;
     };
 
     return Slip;

@@ -39,6 +39,7 @@
   END_EVENT = if IsTouch then 'touchend' else 'mouseup'
 
   WINDOW_HEIGHT = WIN['innerHeight']
+  WINDOW_WIDTH = WIN['innerWidth']
 
   noop = ->
 
@@ -182,8 +183,6 @@
 
       return no if ret is no
 
-
-
       ele = @ele
 
       # 元素位移
@@ -219,23 +218,36 @@
       pageNum = @pageNum
       ele = @ele
 
-      isUp = orient.indexOf("up") > -1
-      isDown = orient.indexOf("down") > -1
+      isUp = orient.indexOf(UP) > -1
+      isDown = orient.indexOf(DOWN) > -1
+      isLeft = orient.indexOf(LEFT) > -1
+      isRight = orient.indexOf(RIGHT) > -1
 
-      page++ if isUp
-      page-- if isDown
+      # 是不是垂直滑动的webapp
+      isVerticalWebapp = @direction is Y
 
-      if isUp or isDown
+      # 是不是有效的手指运动
+      isValidGesture = (isVerticalWebapp and (isUp or isDown)) or (not isVerticalWebapp and (isLeft or isRight))
+
+      if isValidGesture
+
+        page++ if isUp or isLeft
+        page-- if isDown or isRight
+
+        # 归位超出
         page = pageNum - 1  if page is pageNum
         page = 0  if page is -1
 
-        trans = "-#{page * WINDOW_HEIGHT}"
-
         setTransition ele, "all .4s ease-in"
-        setTranslate ele, 0, trans, 0
+
+        if isVerticalWebapp
+          trans = "-#{page * WINDOW_HEIGHT}"
+          setTranslate ele, 0, trans, 0
+        else
+          trans = "-#{page * WINDOW_WIDTH}"
+          setTranslate ele, trans, 0, 0
 
         @page = page
-
 
     # 初始化
     init: -> 
@@ -272,18 +284,54 @@
       @
 
     # webapp
-    webapp: (@elPages) ->
+    webapp: (elPages) ->
+      ele = this.ele
+
+      # 如果传入了选择器
+      if typeof elPages is "string"
+        elPages = ele.querySelectorAll(elPages)
+      else
+        # 传入为空或者元素列表
+        elPages = elPages or ele.childNodes
+
       @isWebapp = yes
       @page = 0
+      @elPages = elPages
 
       elPagesLen = elPages.length
       pageNum = @pageNum = if elPagesLen then elPagesLen else 0
 
       if pageNum > 0
-        ele = this.ele
         ele.style.height = "#{WINDOW_HEIGHT * pageNum}px"
-
         elPage.style.height = "#{WINDOW_HEIGHT}px" for elPage in elPages
+
+        # 横向滑动的webapp
+        if @direction is X
+          ele.style.width = "#{WINDOW_WIDTH * pageNum}px"
+          for elPage in elPages
+            elPage.style.width = "#{WINDOW_WIDTH}px"
+            elPage.style.cssFloat = LEFT
+
+      # 如果是webapp肯定全屏
+      @fullscreen()
+
+      @
+
+    fullscreen: ->
+
+      if @isWebapp
+        ele = @ele
+        child = ele
+
+        while parent = child.parentNode
+
+          if parent.nodeType is 1
+            parent.style.height = "100%"
+            parent.style.overflow = "hidden"
+
+          child = parent
+
+      @
 
 
 
