@@ -1,5 +1,8 @@
 ### ! CopyRight: binnng http://github.com/binnng/slip.js, Licensed under: MIT ###
-;((win, doc) ->
+;((WIN, DOC) ->
+
+  UNDEFINED = undefined
+  NULL = null
 
   # 滑动方向中最小允许距离
   MIN_ALLOW_DISTANCE = 10
@@ -13,7 +16,10 @@
     "moz"
     "ms"
     "o"
+    ""
   ]
+
+  NUMBER_REG = /\-?[0-9]+\.?[0-9]*/g
 
   X = "x"
   Y = "y"
@@ -24,19 +30,54 @@
   UP = "up"
   DOWN = "down"
 
+  IsTouch = 'ontouchend' of WIN
+
+  START_EVENT = if IsTouch then 'touchstart' else 'mousedown'
+
+  MOVE_EVENT = if IsTouch then 'touchmove' else 'mousemove'
+
+  END_EVENT = if IsTouch then 'touchend' else 'mouseup'
+
+  WINDOW_HEIGHT = WIN['innerHeight']
+  WINDOW_WIDTH = WIN['innerWidth']
+
   noop = ->
+
+
+  setTransition = (ele, css) ->
+    for prefix in CSS_PREFIX_MAP
+      name = if prefix then "#{prefix}Transition" else "transition"
+      ele.style[name] = css
 
   ###
   # 设置元素的CSS位移
   # ele 原生的DOM元素
   ###
   setTranslate = (ele, x, y, z) ->
-    cssPrefix = CSS_PREFIX_MAP.concat []
-    cssPrefix.push ""
-
-    for prefix in cssPrefix
+    for prefix in CSS_PREFIX_MAP
       name = if prefix then "#{prefix}Transform" else "transform"
       ele.style[name] = "translate3d(#{x or 0}px, #{y or 0}px, #{z or 0}px)"
+
+  getTranslate = (ele) ->
+
+    translate = []
+    css = ''
+    coord = ''
+
+    for prefix in CSS_PREFIX_MAP
+      name = if prefix then "#{prefix}Transform" else "transform"
+
+      css = ele.style[name]
+
+      if css and typeof css is 'string'
+        coord = css.match(/\((.*)\)/g)[0]
+        translate = coord and coord.match NUMBER_REG
+        break
+
+    if translate.length
+      x: translate[0] or 0
+      y: translate[1] or 0
+      z: translate[2] or 0
 
 
   class Slip
@@ -62,11 +103,18 @@
       # cacheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
       # finger: 手指的位移
       # absFinger: 手指位移的绝对值
-      @coord = @eventCoords = @cacheCoords = @finger = @absFinger = null
+      @coord = @eventCoords = @cacheCoords = @finger = @absFinger = NULL
 
       # 结束后手指滑动的方向
       # 数组 ['left'], ['left', 'up']
       @orient = []
+
+      # slider
+      @isSlider = no
+
+      # webapp当前页
+      # 只有设置webapp才有值
+      @isWebapp = no
 
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @
@@ -91,8 +139,9 @@
       @cacheCoords = @coord
 
       # 清空手指位移
-      @finger = @absFinger = null
+      @finger = @absFinger = NULL
 
+      @onSliderStart event if @isSlider
       ret = @onStart.apply @, [event]
 
     onTouchMove: (event) ->
@@ -137,8 +186,6 @@
 
       return no if ret is no
 
-      
-
       ele = @ele
 
       # 元素位移
@@ -154,8 +201,55 @@
     onTouchEnd: (event) ->
       ele = @ele
 
+      @onSliderEnd event if @isSlider
       ret = @onEnd.apply @, [event]
 
+      # 设置一次translate
+      # 防止用户改变了translate
+      trans = getTranslate this.ele
+      this.setCoord trans if trans
+
+    onSliderStart: (event) ->
+      setTransition @ele, NULL
+
+    onSliderEnd: (event) ->
+      orient = @orient.join ""
+      css = ""
+      trans = 0
+
+      page = @page
+      pageNum = @pageNum
+      ele = @ele
+
+      isUp = orient.indexOf(UP) > -1
+      isDown = orient.indexOf(DOWN) > -1
+      isLeft = orient.indexOf(LEFT) > -1
+      isRight = orient.indexOf(RIGHT) > -1
+
+      # 是不是垂直滑动
+      isVerticalWebapp = @direction is Y
+
+      if isVerticalWebapp
+        page++ if isUp
+        page-- if isDown
+      else 
+        page++ if isLeft
+        page-- if isRight
+
+      # 归位超出
+      page = pageNum - 1  if page is pageNum
+      page = 0  if page is -1
+
+      setTransition ele, "all .4s ease-in"
+
+      if isVerticalWebapp
+        trans = "-#{page * @pageHeight}"
+        setTranslate ele, 0, trans, 0
+      else
+        trans = "-#{page * @pageWidth}"
+        setTranslate ele, trans, 0, 0
+
+      @page = page
 
     # 初始化
     init: -> 
@@ -167,9 +261,9 @@
       onTouchEnd = @_onTouchEnd= (event) => @onTouchEnd event
 
       ele = @ele
-      ele.addEventListener "touchstart", onTouchStart, no
-      ele.addEventListener "touchmove", onTouchMove, no
-      ele.addEventListener "touchend", onTouchEnd, no
+      ele.addEventListener START_EVENT, onTouchStart, no
+      ele.addEventListener MOVE_EVENT, onTouchMove, no
+      ele.addEventListener END_EVENT, onTouchEnd, no
 
       # 初始化元素位移
       initMove = @coord = "x": 0, "y": 0
@@ -185,18 +279,115 @@
     destroy: ->
 
       ele = @ele
-      ele.removeEventListener "touchstart", @_onTouchStart, no
-      ele.removeEventListener "touchmove", @_onTouchMove, no
-      ele.removeEventListener "touchend", @_onTouchEnd, no
+      ele.removeEventListener START_EVENT, @_onTouchStart, no
+      ele.removeEventListener MOVE_EVENT, @_onTouchMove, no
+      ele.removeEventListener END_EVENT, @_onTouchEnd, no
 
       @
 
+    # 设置是个普通的轮播器
+    slider: (elPages)->
+      ele = @ele
 
+      # 如果传入了选择器
+      if typeof elPages is "string"
+        elPages = ele.querySelectorAll(elPages)
+      
+      # 传入为空
+      else if not elPages
+        elPages = []
+        elChilds = ele.childNodes
+
+        for elChild in elChilds
+          elPages.push elChild if elChild.nodeType is 1
+
+      @isSlider = yes
+      @page = 0
+      @elPages = elPages
+
+      elPagesLen = elPages.length
+      pageNum = @pageNum = if elPagesLen then elPagesLen else 0
+
+      # 横向滑动
+      if @direction is X
+        elPage.style.cssFloat = LEFT for elPage in elPages
+
+      @
+
+    # webapp
+    webapp: (elPages) ->
+      @isWebapp = yes
+
+      # 如果是webapp肯定全屏
+      @.slider(elPages).fullscreen()
+
+      elPages = @elPages
+      ele = @ele
+      pageNum = @pageNum
+
+      ele.style.height = "#{WINDOW_HEIGHT * pageNum}px"
+      @height WINDOW_HEIGHT
+
+      # 横向滑动的webapp
+      @width WINDOW_WIDTH if @direction is X
+      
+      @
+
+    height: (num)->
+      ele = @ele
+      elPages = @elPages
+      pageNum = @pageNum
+      num = String(num).replace "px", ""
+
+      if num is "100%"
+        num = WINDOW_HEIGHT
+
+      @pageHeight = num
+
+      if @direction is X
+        ele.style.height = "#{num}px"
+
+      elPage.style.height = "#{num}px" for elPage in elPages
+
+      @
+
+    width: (num)->
+      ele = @ele
+      elPages = @elPages
+      pageNum = @pageNum
+      num = String(num).replace "px", ""
+
+      if num is "100%"
+        num = WINDOW_WIDTH
+
+      @pageWidth = num
+
+      if @direction is X
+        ele.style.width = "#{num * pageNum}px"
+
+      elPage.style.width = "#{num}px" for elPage in elPages
+
+      @
+
+    fullscreen: ->
+
+      ele = @ele
+      child = ele
+
+      while parent = child.parentNode
+
+        if parent.nodeType is 1
+          parent.style.height = "100%"
+          parent.style.overflow = "hidden"
+
+        child = parent
+
+      @
 
   slip = (ele, direction) ->
     instance = new Slip ele, direction or X
     instance.init()
 
-  win.Slip = slip
+  WIN.Slip = slip
 
 ) window, document

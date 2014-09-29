@@ -8,39 +8,65 @@ slip.js
 手机访问：
 
 [搜狐视频客户端完美适配iOS8](http://binnng.github.io/slip.js/demo/sohutv-ios8.html)
+[匆匆那年](http://binnng.github.io/slip.js/demo/sohutv-ccnn.html)
 
 或扫描二维码访问：
 
+搜狐视频客户端完美适配iOS8
 ![搜狐视频客户端完美适配iOS8](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ios8.html&size=6)
+
+匆匆那年
+![匆匆那年](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ccnn.html&size=6)
 
 ### 简单代码
 
+一个全屏可滑动的宣传网页：
+
 ```javascript
-	var ele = document.getElementById("slip");
-	var mySlip = Slip(ele, "xy");
+var ele = document.getElementById("slip");
 
-	mySlip.setCoord({
-		x: 0,
-		y: 120
-	})
-		.start(function(event) {
-			console.log('start');
+// 垂直滑动
+Slip(ele, "y").webaapp();
 
-			// 事件对象
-			cossole.log(event);
-			// 当前坐标值
-			cossole.log(this.coord);
-		})
-		.move(function(event) {
-			console.log('move');
-		})
-		.end(function() {
-			console.log('end');
-			cosole.log(this.coord);
-			
-			// 滑动方向
-			console.log(this.orient);
-		});
+// 水平滑动
+// Slip(ele, "x").webaapp();
+```
+一个可滑动的高度为200px的轮播器：
+```javascript
+var ele = document.getElementById("slip");
+
+Slip(ele, "x").slider()
+  .height(200);
+
+```
+
+一个可滑动的元素，开始滑动，滑动中，结束滑动都有自己的定制：
+```javascript
+  var ele = document.getElementById("slip");
+  var mySlip = Slip(ele, "xy");
+
+  mySlip.setCoord({
+    x: 0,
+    y: 120
+  })
+    .start(function(event) {
+      console.log('start');
+
+      // 事件对象
+      cossole.log(event);
+      // 当前坐标值
+      cossole.log(this.coord);
+    })
+    .move(function(event) {
+      console.log('move');
+    })
+    .end(function() {
+      console.log('end');
+      cosole.log(this.coord);
+      
+      // 滑动方向
+      console.log(this.orient);
+    });
 ```
 
 ## 文档
@@ -69,8 +95,8 @@ var slip = Slip(el, "x");
 
 ```javascript
 slip.setCoord({
-	x: 10,
-	y: 0
+  x: 10,
+  y: 0
 });
 ```
 ##### `destroy`
@@ -128,6 +154,46 @@ slip.destroy();
 * 右上滑: `['right', 'up']`
 * 右下滑: `['right', 'down']`
 * 左下滑: `['left', 'down']`
+
+### 轮播器
+
+#### 方法
+
+##### `slider`
+设置轮播器
+
+```javascript
+Slip(ele, "x").slider();
+```
+
+###### 参数
+* `elPages`: *String|NodeList|空*，可滑动容器（指的是传个Slip方法的dom元素）内的子元素，可以传一个CSS选择器（String），也可以传子元素列表（nodeList），也可以传空，传空情况下会取所有容器内的子元素。
+
+#### `height`
+设置轮播器的高度
+
+```javascript
+Slip(ele, "x").slider().height(200);
+```
+
+##### 参数
+* `num`: *Number|String*, 高度值，数字或者带有px的值。
+* 
+#### `width`
+设置轮播器的宽度
+
+##### 参数
+* `num`: *Number|String*, 宽度值，数字或者带有px的值。
+
+### Webapp 全屏网页
+如[搜狐视频客户端完美适配iOS8](http://binnng.github.io/slip.js/demo/sohutv-ios8.html)这种形式的网页。
+
+#### 方法
+
+##### `webapp`
+```javascript
+Slip(ele, "y").webapp();
+```
 
 ### 源码
 源码用`CoffeeScript`书写，`slip.js`为其生成代码。
