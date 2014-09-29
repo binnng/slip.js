@@ -181,7 +181,7 @@ Slip(ele, "x").slider().height(200);
 
 ##### 参数
 * `num`: *Number|String*, 高度值，数字或者带有px的值。
-* 
+
 #### `width`
 设置轮播器的宽度
 
