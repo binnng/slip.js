@@ -48,10 +48,7 @@ Slip(ele, "x").slider()
   var ele = document.getElementById("slip");
   var mySlip = Slip(ele, "xy");
 
-  mySlip.setCoord({
-    x: 0,
-    y: 120
-  })
+  mySlip
     .start(function(event) {
       console.log('start');
 
