@@ -8,6 +8,7 @@ slip.js
 手机访问：
 
 [搜狐视频客户端完美适配iOS8](http://binnng.github.io/slip.js/demo/sohutv-ios8.html)
+
 [匆匆那年](http://binnng.github.io/slip.js/demo/sohutv-ccnn.html)
 
 或扫描二维码访问：
