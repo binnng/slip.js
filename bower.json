@@ -1,0 +1,21 @@
+{
+  "name": "slip.js",
+  "main": "min.slip.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/binnng/slip.js",
+  "authors": [
+    "binnng <imbinnng@gmail.com>"
+  ],
+  "description": "移动端手指滑动组件，零依赖。",
+  "keywords": [
+    "slip",
+    "swipe",
+    "slider",
+    "webapp"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "demo.html"
+  ]
+}
