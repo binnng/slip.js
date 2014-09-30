@@ -30,7 +30,8 @@
   UP = "up"
   DOWN = "down"
 
-  IsTouch = 'ontouchend' of WIN
+  #IsTouch = 'ontouchend' of WIN
+  IsTouch = yes
 
   START_EVENT = if IsTouch then 'touchstart' else 'mousedown'
 

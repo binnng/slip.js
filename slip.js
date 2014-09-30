@@ -16,7 +16,7 @@
   RIGHT = "right";
   UP = "up";
   DOWN = "down";
-  IsTouch = 'ontouchend' in WIN;
+  IsTouch = true;
   START_EVENT = IsTouch ? 'touchstart' : 'mousedown';
   MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove';
   END_EVENT = IsTouch ? 'touchend' : 'mouseup';
