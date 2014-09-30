@@ -21,6 +21,20 @@ slip.js
 
 ![匆匆那年](http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ccnn.html&size=6)
 
+### 安装
+
+使用 bower 安装
+
+```
+bower install slip.binnng.js --save
+```
+
+更新版本
+
+```
+bower update
+```
+
 ### 简单代码
 
 一个全屏可滑动的宣传网页：
