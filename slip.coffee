@@ -84,14 +84,29 @@
 
     # 获取事件触发距离
     # 处理一堆兼容
-    getCoordinates = (event) ->
-      touches = event.touches and ((if event.touches.length then event.touches else [event]))
-      e = (event.changedTouches and event.changedTouches[0]) or (event.originalEvent and event.originalEvent.changedTouches and event.originalEvent.changedTouches[0]) or touches[0].originalEvent or touches[0]
-      "x": e.clientX
-      "y": e.clientY
+    getCoordinatesArray = [
+
+      # 移动端设备
+      (event) ->
+        touches = event.touches and ((if event.touches.length then event.touches else [event]))
+        e = (event.changedTouches and event.changedTouches[0]) or (event.originalEvent and event.originalEvent.changedTouches and event.originalEvent.changedTouches[0]) or touches[0].originalEvent or touches[0]
+        "x": e.clientX
+        "y": e.clientY
+
+      # pc设备
+      (event) ->
+        e = event
+        "x": e.clientX
+        "y": e.clientY
+    ]
+
+    getCoordinates = if IsTouch then getCoordinatesArray[0] else getCoordinatesArray[1]
+
 
     constructor: (@ele, @direction) ->
 
+      # 是不是被按下了，只有按下才允许移动
+      @_isPressed = no
 
       # 开始的回调
       # 移动中回调
@@ -134,6 +149,8 @@
       @
 
     onTouchStart: (event) ->
+      @_isPressed = yes
+
       @eventCoords = getCoordinates event
 
       @cacheCoords = @coord
@@ -146,6 +163,8 @@
 
     onTouchMove: (event) ->
       event.preventDefault()
+
+      return no unless @_isPressed
 
       moveCoords = getCoordinates event
 
@@ -199,6 +218,7 @@
       ele.setAttribute attr, eleMove[attr] for attr of eleMove
 
     onTouchEnd: (event) ->
+
       ele = @ele
 
       @onSliderEnd event if @isSlider
@@ -210,6 +230,7 @@
       @setCoord trans if trans
 
       @orient = []
+      @_isPressed = no
 
     onSliderStart: (event) ->
       setTransition @ele, NULL
