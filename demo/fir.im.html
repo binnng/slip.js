@@ -1,0 +1,505 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <title>Fly It Remotely - FIR.im</title>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="FIR FIR.im firapp iOS Android ipa adhoc 发布 测试 内测 安装 安卓 iPad iPhone">
+  <meta name="description" content="FIR.im 为开发者提供简洁迅速的内测程序分发服务">
+  
+  <meta property="og:type" content="webpage">
+  <meta property="og:url" content="http://fir.im">
+  <meta property="og:title" content="Fly It Remotely - FIR.im">
+  <meta property="og:description" content="FIR.im 为开发者提供简洁迅速的内测程序分发服务">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="FIR.im">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no minimal-ui">
+  <link rel="shortcut icon" type="image/x-icon" href="http://firweb-test.qiniudn.com/images/favicon.ico">
+  
+  <meta property="qc:admins" content="065072575416612615" />
+  <link rel="stylesheet" href="//fir.im/stylesheets/e9e33326.base.min.css">
+  <link rel="stylesheet" href="//fir.im/stylesheets/474814bf.j.min.css">
+  <script src="//fir.im/javascripts/46126cf9.rl.min.js"></script>
+  <script src="//fir.im/javascripts/f5b01db9.a.min.js"></script>
+</head>
+<body>
+
+  <div id="outside">
+    <div class="loading loading-default center">
+      <p>FIR.im</p>
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="sidebar" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;">
+  </div>
+
+  <div id='navbar-toggle' class='hide'
+    style="position: fixed;right: 10px;top: 10px;">
+    <div><i class="fa fa-bars fa-6"></i></div>
+  </div>
+
+  <script type='text/sidebar-tmpl' id='tmpl-sidebar'>
+    <nav class="navbar-trans navbar-icon-only visible-xs" role="navigation">
+      <div class="container">
+        <ul class="nav navbar-nav pull-right">
+
+          <li>
+            <a href="/plaza" ui-sref='plaza'>
+              <span>广场</span>
+              <span class='nav-icon'><i class='fir-icon-plaza'></i></span>
+            </a>
+          </li>
+
+          <li id="uuid">
+            <a href="/udid" ui-sref='udid'>
+              <span>UDID</span>
+              <span class='nav-icon'><i class='fir-icon-udid'></i></span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/dev/api" ui-sref='dev.api'>
+              <span>开发者</span>
+              <span class='nav-icon'><i class='fir-icon-developer'></i></span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/signin" ui-sref='signin'>
+              <span>登录</span>
+              <span class='nav-icon'><i class='fir-icon-login'></i></span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+  </script>
+
+  <script type='text/javascript' id='preload-script'>
+    var console = console || {log: function(){}, info: function(){} };
+    var i = 0;
+    var loadedCounter = 0;
+    var preloadImgs = [
+      'http://firweb-test.qiniudn.com/images/s1_bg.jpg',
+      'http://firweb-test.qiniudn.com/images/propeller_27.png',
+      'http://firweb-test.qiniudn.com/images/boy_phone_500.png',
+      'http://firweb-test.qiniudn.com/images/arrow.png',
+      'http://firweb-test.qiniudn.com/images/s2_icon1.png',
+      'http://firweb-test.qiniudn.com/images/s2_icon2.png',
+      'http://firweb-test.qiniudn.com/images/s2_icon3.png',
+      'http://firweb-test.qiniudn.com/images/s2_icon4.png',
+      "http://firweb-test.qiniudn.com/images/s3_bad_face.png",
+      "http://firweb-test.qiniudn.com/images/s3_sweat.png",
+      "http://firweb-test.qiniudn.com/images/s3_phone.png",
+      "http://firweb-test.qiniudn.com/images/s3_v12.png",
+      "http://firweb-test.qiniudn.com/images/s3_v13.png",
+      "http://firweb-test.qiniudn.com/images/s3_v14.png",
+      'http://firweb-test.qiniudn.com/images/s3_ele.png',
+      'http://firweb-test.qiniudn.com/images/s3_clock.png',
+      'http://firweb-test.qiniudn.com/images/s4_ava_container.png',
+      'http://firweb-test.qiniudn.com/images/plane.png',
+      'http://firweb-test.qiniudn.com/images/propeller.png',
+      'http://firweb-test.qiniudn.com/images/icon-weibo.png',
+      'http://firweb-test.qiniudn.com/images/icon-email.png',
+      'http://firweb-test.qiniudn.com/images/icon-feedback.png'
+    ];
+    for (var i = preloadImgs.length - 1; i >= 0; i--) {
+      src = preloadImgs[i];
+      img = new Image();
+      img.src= src;
+      loadedOrError = function(){
+        loadedCounter += 1
+        if(loadedCounter === preloadImgs.length){
+          takeOff()
+        }
+      }
+        
+      img.onload = loadedOrError
+      img.onerror = loadedOrError
+    };
+  </script>
+
+  <script type='text/fir-template' id='cones'>
+    <nav class="navbar navbar-trans navbar-main" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="#">Fly It Remotely</a>
+        <ul class="nav navbar-nav pull-right">
+          <li><a href="/plaza" ui-sref='plaza'>
+            <span>广场</span>
+            <span class='nav-icon'><i class='fir-icon-plaza'/></span>
+          </a></li>
+          <li class='nav-link-publish'><a href="/publish" ui-sref='publish'>
+            <span>发布</span>
+            <span class='nav-icon'><i class='fir-icon-plane-2'/></span>
+          </a></li>
+          <li id="uuid"><a href="/udid" ui-sref='udid'>
+            <span>UDID</span>
+            <span class='nav-icon'><i class='fir-icon-udid'/></span>
+          </a></li>
+          <li><a href="/dev/api" ui-sref='dev.api'>
+            <span>开发者</span>
+            <span class='nav-icon'><i class='fir-icon-developer'/></span>
+          </a></li>
+          <li><a href="/email/joinus.html" target='_blank'>
+            <span>加入我们</span>
+            <span class='nav-icon'><i class="fa fa-thumbs-o-up"></i></span>
+          </a></li>
+          
+            <li><a href="/signin" ui-sref='signin'>
+              <span>登录</span>
+              <span class='nav-icon'><i class='fir-icon-login'/></span>
+            </a></li>
+          
+        </ul>
+      </div>
+    </nav>
+
+
+
+    <div class="supercontainer">
+      
+
+      <!-- First section -->
+      <section class="first dt section0 loaded-fade">
+        <nav class="navbar navbar-fixed-top navbar-trans navbar-only-brand visible-xs" role="navigation">
+          <div class='container'>
+            <a class="navbar-brand" href="#" style='width: 100%;'>Fly It Remotely</a>
+          </div>
+        </nav>
+
+        <div class="page-vertical-align">
+          <div class="page-content-wrapper">
+            <h1 class='caption'>
+              only <span class='fz100'>2</span> steps
+              <small>To Distribute Beta Applications</small>
+            </h1>
+          </div>
+          <div class="boy">
+            <img src="http://firweb-test.qiniudn.com/images/propeller_27.png" alt="" class="propeller">
+            <img src="http://firweb-test.qiniudn.com/images/boy_phone_500.png" alt="">
+          </div>
+        </div>
+        <!--<span class="arrow-down" id='arrow-down'>
+          <img src="http://firweb-test.qiniudn.com/images/arrow.png" alt="">
+        </span>-->
+      </section>
+      <!-- end first -->
+
+
+      <!-- Second section -->
+      <section class="second dt section1">
+        <div class="page-vertical-align">
+          <div class="page-content-wrapper">
+            <h2 class='section-caption'>
+              What is FIR?
+            </h2>
+            <p class="section-desc">
+              FIR是一个免费App托管平台, 全名 Fly It Remotely. 可以2步简单发布应用程序, 极大简化了App内测的过程. 
+            </p>
+            <div class="features row text-center">
+              <div class="dtc feature-item col-md-3 col-xs-12">
+                <div class="shadow-icon"><img src="http://firweb-test.qiniudn.com/images/s2_icon1.png"></div>
+                <h4>省时</h4>
+                <p>内测APP发布安装, 1-3分钟搞定</p>
+              </div>
+              <div class="dtc feature-item col-md-3 col-xs-12">
+                <div class="shadow-icon"><img src="http://firweb-test.qiniudn.com/images/s2_icon2.png"></div>
+                <h4>安全</h4>
+                <p>APP权限管理，无需担心APP被泄露</p>
+              </div>
+              <div class="dtc feature-item col-md-3 col-xs-12">
+                <div class="shadow-icon"><img src="http://firweb-test.qiniudn.com/images/s2_icon3.png"></div>
+                <h4>协作</h4>
+                <p>APP优化协作，Bug解决更流畅</p>
+              </div>
+              <div class="dtc feature-item col-md-3 col-xs-12">
+                <div class="shadow-icon"><img src="http://firweb-test.qiniudn.com/images/s2_icon4.png"></div>
+                <h4>倾听</h4>
+                <p>随时查看用户反馈，发布的内测应用不再杳无音讯</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- end second -->
+
+
+
+      <!-- Third section -->
+      <section class="third dt section2 hslider" data-delay=''>
+        <div class="page-vertical-align">
+          <div class="page-content-wrapper-full">
+            <h2 class='section-caption'>
+              Why is FIR?
+            </h2>
+
+            <div id="why-fir" class="carousel slide" data-ride="carousel" data-interval="false">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li data-target="#why-fir" data-slide-to="0" class="active"></li>
+                <li data-target="#why-fir" data-slide-to="1"></li>
+                <li data-target="#why-fir" data-slide-to="2"></li>
+                <li data-target="#why-fir" data-slide-to="3"></li>
+              </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                <div class="item active">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s3_bad_face.png" class='cdelay'>
+                      <img src="http://firweb-test.qiniudn.com/images/s3_sweat.png" class='img-sweat '>
+                      <!-- cdelay -->
+                    </div>
+                    <div class="carousel-caption">
+                      <h4 data-delay='delay-4'>测试用户不懂UDID，要挨个指导截屏？</h4>
+                      <p data-delay='delay-6'>
+                        技术小白也能通过FIR.im快速找到UDID，并发送给开发团队。
+                    </p>
+                    
+                  </div>
+                  </div>
+                </div>
+              
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s3_phone.png" class='phone-v11 cdelay'>
+                      <img class='stack  v12' src="http://firweb-test.qiniudn.com/images/s3_v12.png">
+                      <!-- cdelay -->
+                      <img class='stack  v13' src="http://firweb-test.qiniudn.com/images/s3_v13.png">
+                      <!-- cdelay -->
+                      <img class='stack  v14' src="http://firweb-test.qiniudn.com/images/s3_v14.png">
+                      <!-- cdelay -->
+                    </div>
+                    <div class="carousel-caption">
+                      <h4 data-delay='delay-4'>版本频繁更新，用户容易分不清最新版本？</h4>
+                      <p data-delay='delay-6'>
+                        同一个App, 同一个地址，除非你想变。再也不用担心版本分不清的问题了！
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s3_ele.png" class='icon-elephant cdelay'>
+                    </div>
+                    <div class="carousel-caption">
+                      <h4 data-delay='delay-4'>不想弄服务器？</h4>
+                      <p data-delay='delay-6'>
+                        不用管Ubuntu，不用想Apachi(鬼知道阿帕奇怎么拼)，将内测APP托管到FIR.im，更专注地做产品吧！
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s3_clock.png" class='icon-clock cdelay'>
+                    </div>
+                    <div class="carousel-caption">
+                      <h4 data-delay='delay-4'>不想浪费生命？</h4>
+                      <p data-delay='delay-6'>
+                        99MB的ipa/apk发送2个小时，并且发送失败要重试？&nbsp;
+                        什么? 又不能同步了? &nbsp;
+                        什么? 又有新设备? UDID? 截图?? &nbsp;
+                        NO!!! 别等了！FIR.im，只需两步，就能分发内测APP！
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+
+              <!-- Controls -->
+              <a data-ctrl='horizontal' class="left carousel-control" href="#why-fir" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+              </a>
+              <a data-ctrl='horizontal' class="right carousel-control" href="#why-fir" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section> 
+      <!-- end third -->
+
+
+      <!-- Five section -->
+      <section class="fouth dt section3 hslider" data-delay=''>
+        <div class="page-vertical-align">
+          <div class="page-content-wrapper-full">
+            <h2 class='section-caption'>
+              What our users say?
+            </h2>
+        
+
+            <div id="what-say" class="carousel slide" data-ride="carousel" data-interval="false">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li data-target="#what-say" data-slide-to="0" class="active"></li>
+                <li data-target="#what-say" data-slide-to="1"></li>
+                <li data-target="#what-say" data-slide-to="2"></li>
+                <li data-target="#what-say" data-slide-to="3"></li>
+              </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+
+                <div class="item active">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_milkliker1.jpg" class='s4-avator img-circle' />
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_container.png" class='ava-holder'>
+                      <span>余书懿</span>
+                    </div>
+                    <div class="carousel-caption">
+                      <p>
+                        FIR.im可以迅速的发布应用,只需要两个步骤,这对于还在测试阶段中的App来说再好不过了.你无需给每一个需要下载安装应用的人,发送邮件或者发送客户端只需要发送FIR.im 所生成的短链接即可. 通过手机打开该地址,简单浏览后即可直接下载应用. 一个字:赞!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_dandan.jpg" class='s4-avator img-circle'>
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_container.png" class='ava-holder'>
+                      <span>蛋炒饭炒饭</span>
+                    </div>
+                    <div class="carousel-caption">
+                      <p>
+                        FIR.im, 个人觉得比TF更简单好用，开发者只需要简单把打好的ipa包上传上去，获得一个短链接，测试人员在手机浏览器中打开这个项目链接，就可以直接安装最新的测试版本了，好用的让人想哭。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_milklike.jpeg" class='s4-avator img-circle' />
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_container.png" class='ava-holder'>
+                      <span>milkliker</span>
+                    </div>
+                    <div class="carousel-caption">
+                      <p>
+                        FIR.im对于TF在墙内死慢，而又不想浪费生命的移动开发同学绝对是必备利器！小伙伴们可以跟TF说再见了~
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="item">
+                  <div class="content-wrapper">
+                    <div class="img-wrap" style='height: 220px;'>
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_jxdwinter.jpeg" class='s4-avator img-circle' />
+                      <img src="http://firweb-test.qiniudn.com/images/s4_ava_container.png" class='ava-holder'>
+                      <span>jxdwinter</span>
+                    </div>
+                    <div class="carousel-caption">
+                      <p>
+                        FIR.im是内部测试的绝对利器，尤其是像我们这种开发和产品在异地的小公司。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+
+              <!-- Controls -->
+              <a data-ctrl='horizontal' class="left carousel-control" href="#what-say" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+              </a>
+              <a data-ctrl='horizontal' class="right carousel-control" href="#what-say" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+              </a>
+            </div>
+
+
+          </div>
+        </div>
+      </section>
+      <!-- end fouth -->
+
+
+      <!-- last section -->
+      <section class="last dt section4">
+        <div class="page-vertical-align">
+          <div class="page-content-wrapper text-center">
+            <div class="img-wrap">
+              <img src="http://firweb-test.qiniudn.com/images/plane.png" alt="">
+              <img src="http://firweb-test.qiniudn.com/images/propeller.png" class='propeller'>
+            </div>
+            <h2 class='section-caption'>Partners</h2>
+
+            <div class="partners">
+              <a target='_blank' href="https://avoscloud.com/" class="partner">
+                <img src="//fir.im/images/partner-avoscloud.png" alt="AVOS Cloud" style='max-height:70px;max-width: 170px;'>
+              </a>
+              <a target='_blank' href="https://www.qingcloud.com/" class="partner">
+                <img src="//fir.im/images/partner-qingcloud.png" alt="青云" style='max-height:70px;'>
+              </a>
+              <a target='_blank' href="http://easemob.com/" class="partner">
+                <img src="//fir.im/images/partner-easemob.png" alt="环信" style='max-height:70px;'>
+              <a target='_blank' href="https://worktile.com/" class="partner">
+                <img src="//fir.im/images/partner-worktile.png" alt="Worktile" style='max-height:110px;'>
+              </a>
+              <a target='_blank' href="http://www.umeng.com/" class="partner">
+                <img src="//fir.im/images/partner-umeng.png" alt=" 友盟" style='max-height:110px;'>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <footer class='copyright'>
+          ©2014 <a href="/">FIR.im</a>
+        </footer>
+      </section>
+      <!-- end last -->
+    </div>
+  </script>
+  
+  
+  
+  
+  
+  
+  
+  <!-- /.partners -->
+
+  <script src="//fir.im/lib/jquery-plugins.min.js"></script>
+
+  <script>var _hmt = _hmt || [];</script>
+	<script>
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?3a0564067a411360ad6e00622dac15f5";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+  
+
+</body>
+<script type="text/javascript" src="../min.slip.js"></script>
+
+<script type="text/javascript">
+window.onload = function() {
+  var supercontainer = document.querySelectorAll('.supercontainer')[0];
+  Slip(supercontainer, 'y').webapp();
+}
+</script>
+</html>
