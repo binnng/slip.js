@@ -27,6 +27,13 @@
 				background-position: center 30%;
 			}
 
+			.orient .page{
+				background-size: contain;
+			}
+			.orient .page-1{
+				background-size: 40%;
+			}
+
 			b{
 				position: absolute;
 				bottom: 15px;
@@ -63,8 +70,14 @@
 		</div>
 	</body>
 	<script type="text/javascript">
+		var isWindowOrient = (window.orientation || 0) === 0;
+
 		var wrap = document.getElementById('wrap');
 		var container = document.getElementById('container');
+		
+		if (isWindowOrient) {
+			container.className = 'orient';
+		}
 
 		var total = 5;
 		var init = false;

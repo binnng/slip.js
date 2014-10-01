@@ -16,7 +16,7 @@
   RIGHT = "right";
   UP = "up";
   DOWN = "down";
-  IsTouch = true;
+  IsTouch = 'ontouchend' in WIN;
   START_EVENT = IsTouch ? 'touchstart' : 'mousedown';
   MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove';
   END_EVENT = IsTouch ? 'touchend' : 'mouseup';
@@ -72,21 +72,33 @@
     }
   };
   Slip = (function() {
-    var getCoordinates;
+    var getCoordinates, getCoordinatesArray;
 
-    getCoordinates = function(event) {
-      var e, touches;
-      touches = event.touches && (event.touches.length ? event.touches : [event]);
-      e = (event.changedTouches && event.changedTouches[0]) || (event.originalEvent && event.originalEvent.changedTouches && event.originalEvent.changedTouches[0]) || touches[0].originalEvent || touches[0];
-      return {
-        "x": e.clientX,
-        "y": e.clientY
-      };
-    };
+    getCoordinatesArray = [
+      function(event) {
+        var e, touches;
+        touches = event.touches && (event.touches.length ? event.touches : [event]);
+        e = (event.changedTouches && event.changedTouches[0]) || (event.originalEvent && event.originalEvent.changedTouches && event.originalEvent.changedTouches[0]) || touches[0].originalEvent || touches[0];
+        return {
+          "x": e.clientX,
+          "y": e.clientY
+        };
+      }, function(event) {
+        var e;
+        e = event;
+        return {
+          "x": e.clientX,
+          "y": e.clientY
+        };
+      }
+    ];
+
+    getCoordinates = IsTouch ? getCoordinatesArray[0] : getCoordinatesArray[1];
 
     function Slip(ele, direction) {
       this.ele = ele;
       this.direction = direction;
+      this._isPressed = false;
       this.onStart = this.onMove = this.onEnd = noop;
       this.coord = this.eventCoords = this.cacheCoords = this.finger = this.absFinger = NULL;
       this.orient = [];
@@ -122,6 +134,7 @@
 
     Slip.prototype.onTouchStart = function(event) {
       var ret;
+      this._isPressed = true;
       this.eventCoords = getCoordinates(event);
       this.cacheCoords = this.coord;
       this.finger = this.absFinger = NULL;
@@ -134,6 +147,9 @@
     Slip.prototype.onTouchMove = function(event) {
       var absFinger, attr, direction, ele, eleMove, finger, moveCoords, oppDirection, orient, ret, _results;
       event.preventDefault();
+      if (!this._isPressed) {
+        return false;
+      }
       moveCoords = getCoordinates(event);
       direction = this.direction;
       finger = this.finger = {
@@ -177,6 +193,7 @@
 
     Slip.prototype.onTouchEnd = function(event) {
       var ele, ret, trans;
+      this._isPressed = false;
       ele = this.ele;
       if (this.isSlider) {
         this.onSliderEnd(event);
