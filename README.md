@@ -23,16 +23,26 @@ slip.js
 
 ### 安装
 
-使用 bower 安装
+#### 使用 [bower](http://bower.io/) 安装
 
 ```
-bower install slip.binnng.js --save
+$ bower install slip.binnng.js --save
 ```
 
 更新版本
 
 ```
-bower update
+$ bower update
+```
+
+#### 使用 [Yeoman](http://yeoman.io/) 安装
+
+```
+$ npm install -g generator-webapp-slip
+```
+
+```
+$ yo webapp-slip
 ```
 
 ### 简单代码
