@@ -363,6 +363,7 @@
       # 3. 反弹的距离 < 页面的距离
       # 4. 所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)
       # 5. 即反弹的时长 < 整页过渡的时长
+      # 
       # 恩，这叫情怀
       if isOut is yes
         duration *= if isVerticalWebapp then absFinger[Y] / @pageHeight else absFinger[X] / @pageWidth
