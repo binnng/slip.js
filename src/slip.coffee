@@ -58,10 +58,14 @@
   MOVE_EVENT = if IsTouch then 'touchmove' else 'mousemove'
   END_EVENT = if IsTouch then 'touchend' else 'mouseup'
 
+  # WINDOW_HEIGHT WINDOW_WIDTH
+  # -----
   # 浏览器窗口的高度，宽度
   WINDOW_HEIGHT = WIN['innerHeight']
   WINDOW_WIDTH = WIN['innerWidth']
 
+  # noop
+  # -----
   # 空函数
   # 作为默认的回调函数
   noop = ->
@@ -69,6 +73,8 @@
   # 方法
   # ====
 
+  # setTransition
+  # -----
   # 设置css的transition
   # * `ele`: 原生的dom元素
   # * `css`: transition的值
@@ -77,6 +83,7 @@
       name = if prefix then "#{prefix}Transition" else "transition"
       ele.style[name] = css
 
+  # setTranslate
   # 设置元素的CSS位移
   # * `ele`: 原生的DOM元素
   # * `x|y|z`: 偏移的x, y, z
@@ -85,6 +92,8 @@
       name = if prefix then "#{prefix}Transform" else "transform"
       ele.style[name] = "translate3d(#{x or 0}px, #{y or 0}px, #{z or 0}px)"
 
+  # getTranslate
+  # -----
   # 获取元素的translate值
   # * `ele`: 原生的dom元素
   getTranslate = (ele) ->
@@ -111,6 +120,8 @@
   # Slip类
   # =====
 
+  # class Slip
+  # -----
   # 核心的`Slip`构造函数
   class Slip
 
@@ -186,6 +197,8 @@
     move  : (fn) -> (@onMove  = fn) and @
     end   : (fn) -> (@onEnd   = fn) and @
 
+    # Slip(ele).setCoord(...)
+    # -----
     # 设置元素坐标
     # 如果元素初始化就有一定的偏移，就可以使用这个方法
     # * `userCoords`: 一个坐标对象
@@ -368,6 +381,8 @@
 
       @
 
+    # Slip(ele).destroy()
+    # -----
     # 摧毁元素的滑动
     destroy: ->
 
@@ -378,6 +393,8 @@
 
       @
 
+    # Slip(ele).slider()
+    # -----
     # 设置是个普通的轮播器
     # `elPages`: 可接受三种类型的值
     # 1. *String*: 传入一个选择器
@@ -413,6 +430,8 @@
 
       @
 
+    # Slip(ele).webapp()
+    # -----
     # 设置页面是个全屏的webapp
     # 继承了slider，再做些特别处理。
     webapp: (elPages) ->
@@ -433,6 +452,8 @@
       
       @
 
+    # Slip(ele).slider().height(200)
+    # -----
     # 设置轮播器的高度
     height: (num)->
       ele = @ele
@@ -452,6 +473,8 @@
 
       @
 
+    # Slip(ele).slider().width('100%');
+    # -----
     # 设置轮播器的宽度
     width: (num)->
       ele = @ele
@@ -471,6 +494,8 @@
 
       @
 
+    # Slip(ele).fullscreen()
+    # -----
     # 设置全屏
     fullscreen: ->
 
@@ -487,12 +512,15 @@
 
       @
 
+    # Slip(ele).webapp().time(200)
+    # -----
     # 设置轮播时页面切换的过渡时长
     time: (duration) ->
       @duration = (duration.replace "ms", "") + "ms"
 
       @
 
+  # slip
   # 暴露到window的对象，内部实例化`Slip`
   slip = (ele, direction) ->
     instance = new Slip ele, direction or X
