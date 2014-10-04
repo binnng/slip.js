@@ -632,14 +632,14 @@ Licensed <span class="hljs-attribute">under</span>: MIT
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>默认的滑屏过渡时间
+              <p>默认的滑屏过渡时间，单位为ms
 这个值可以通过<code>time</code>方法来重置</p>
 <pre><code><span class="hljs-regexp">//</span> 设置过度时间为<span class="hljs-number">200</span>ms
 Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">200</span>);
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@duration</span> = <span class="hljs-string">"400ms"</span>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@duration</span> = <span class="hljs-string">"400"</span>
 
     start : <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span> (<span class="hljs-property">@onStart</span> = fn) <span class="hljs-keyword">and</span> @
     move  : <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span> (<span class="hljs-property">@onMove</span>  = fn) <span class="hljs-keyword">and</span> @
@@ -972,19 +972,7 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">onSliderEnd</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-      orient = <span class="hljs-property">@orient</span>.join <span class="hljs-string">""</span>
-      css = <span class="hljs-string">""</span>
-      trans = <span class="hljs-number">0</span>
-
-      page = <span class="hljs-property">@page</span>
-      pageNum = <span class="hljs-property">@pageNum</span>
-      ele = <span class="hljs-property">@ele</span>
-
-      isUp = orient.indexOf(UP) &gt; -<span class="hljs-number">1</span>
-      isDown = orient.indexOf(DOWN) &gt; -<span class="hljs-number">1</span>
-      isLeft = orient.indexOf(LEFT) &gt; -<span class="hljs-number">1</span>
-      isRight = orient.indexOf(RIGHT) &gt; -<span class="hljs-number">1</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">onSliderEnd</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -994,6 +982,49 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>手指滑动的方向</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      orient = <span class="hljs-property">@orient</span>.join <span class="hljs-string">""</span>
+
+      trans = <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>是不是超出了，即第一页向前滑，最后一页向后滑</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      isOut = <span class="hljs-literal">no</span>
+
+      page = <span class="hljs-property">@page</span>
+      pageNum = <span class="hljs-property">@pageNum</span>
+      ele = <span class="hljs-property">@ele</span>
+      duration = <span class="hljs-property">@duration</span>
+      absFinger = <span class="hljs-property">@absFinger</span>
+
+      isUp = orient.indexOf(UP) &gt; -<span class="hljs-number">1</span>
+      isDown = orient.indexOf(DOWN) &gt; -<span class="hljs-number">1</span>
+      isLeft = orient.indexOf(LEFT) &gt; -<span class="hljs-number">1</span>
+      isRight = orient.indexOf(RIGHT) &gt; -<span class="hljs-number">1</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>是不是垂直滑动</p>
 
@@ -1011,20 +1042,49 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>归位超出的页数</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      page = pageNum - <span class="hljs-number">1</span>  <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> pageNum
-      page = <span class="hljs-number">0</span>  <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> pageNum
+        page = pageNum - <span class="hljs-number">1</span>
+        isOut = <span class="hljs-literal">yes</span>
 
-      setTransition ele, <span class="hljs-string">"all <span class="hljs-subst">#{<span class="hljs-property">@duration</span>}</span> ease-in"</span>
+      <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span>
+        page = <span class="hljs-number">0</span>
+        isOut = <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>这里做了个细节处理</p>
+<ol>
+<li>当用户定义整页滑动的时长为400ms</li>
+<li>如果在超出时，反弹回去的时间不应为400ms</li>
+<li>反弹的距离 &lt; 页面的距离</li>
+<li>所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)</li>
+<li>即反弹的时长 &lt; 整页过渡的时长
+恩，这叫情怀</li>
+</ol>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> isOut <span class="hljs-keyword">is</span> <span class="hljs-literal">yes</span>
+        duration *= <span class="hljs-keyword">if</span> isVerticalWebapp <span class="hljs-keyword">then</span> absFinger[Y] / <span class="hljs-property">@pageHeight</span> <span class="hljs-keyword">else</span> absFinger[X] / <span class="hljs-property">@pageWidth</span>
+        
+      setTransition ele, <span class="hljs-string">"all <span class="hljs-subst">#{duration}</span>ms ease-in"</span>
 
       <span class="hljs-keyword">if</span> isVerticalWebapp
         trans = <span class="hljs-string">"-<span class="hljs-subst">#{page * <span class="hljs-property">@pageHeight</span>}</span>"</span>
@@ -1038,11 +1098,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-56">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>初始化</p>
 
@@ -1054,11 +1114,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-57">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>之所以加上下划线方法，是为了给 <code>destroy</code> 用</p>
 
@@ -1076,11 +1136,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-58">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>初始化元素位移</p>
 
@@ -1098,11 +1158,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-59">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h2 id="slip-ele-destroy-">Slip(ele).destroy()</h2>
 
@@ -1111,11 +1171,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-60">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>摧毁元素的滑动</p>
 
@@ -1133,11 +1193,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-61">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <h2 id="slip-ele-slider-">Slip(ele).slider()</h2>
 
@@ -1146,11 +1206,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-62">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>设置是个普通的轮播器
 <code>elPages</code>: 可接受三种类型的值</p>
@@ -1169,11 +1229,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-63">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>如果传入了选择器</p>
 
@@ -1185,11 +1245,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-64">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>传入为空</p>
 
@@ -1212,11 +1272,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-65">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>横向滑动</p>
 
@@ -1230,11 +1290,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-66">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <h2 id="slip-ele-webapp-">Slip(ele).webapp()</h2>
 
@@ -1243,11 +1303,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-67">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>设置页面是个全屏的webapp
 继承了slider，再做些特别处理。</p>
@@ -1260,11 +1320,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-68">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>如果是webapp肯定全屏</p>
 
@@ -1282,11 +1342,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-69">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>横向滑动的webapp</p>
 
@@ -1299,11 +1359,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-70">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <h2 id="slip-ele-slider-height-200-">Slip(ele).slider().height(200)</h2>
 
@@ -1312,11 +1372,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-71">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>设置轮播器的高度</p>
 
@@ -1343,11 +1403,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-72">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <h2 id="slip-ele-slider-width-100-">Slip(ele).slider().width(‘100%’);</h2>
 
@@ -1356,11 +1416,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-73">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>设置轮播器的宽度</p>
 
@@ -1387,11 +1447,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-74">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <h2 id="slip-ele-fullscreen-">Slip(ele).fullscreen()</h2>
 
@@ -1400,11 +1460,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-75">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>设置全屏</p>
 
@@ -1428,11 +1488,11 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-76">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <h2 id="slip-ele-webapp-time-200-">Slip(ele).webapp().time(200)</h2>
 
@@ -1441,29 +1501,29 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
         </li>
         
         
-        <li id="section-77">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>设置轮播时页面切换的过渡时长</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">time</span>: <span class="hljs-function"><span class="hljs-params">(duration)</span> -&gt;</span>
-      <span class="hljs-property">@duration</span> = (duration.replace <span class="hljs-string">"ms"</span>, <span class="hljs-string">""</span>) + <span class="hljs-string">"ms"</span>
+      <span class="hljs-property">@duration</span> = String(duration).replace <span class="hljs-string">"ms"</span>, <span class="hljs-string">""</span>
 
       @</pre></div></div>
             
         </li>
         
         
-        <li id="section-78">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>slip
 暴露到window的对象，内部实例化<code>Slip</code></p>
