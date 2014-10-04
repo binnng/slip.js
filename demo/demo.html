@@ -25,7 +25,7 @@
 <script type="text/javascript">
 	var ele = document.getElementById("slip");
 </script>
-<script type="text/javascript" src="slip.js"></script>
+<script type="text/javascript" src="dist/min.slip.js"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/zepto/1.0rc1/zepto.min.js"></script>
 <script type="text/javascript">
 	var slip = Slip(ele, "xy");
@@ -45,7 +45,8 @@
 	.end(function() {
 		var x = Math.abs(this.coord.x);
 		var y = Math.abs(this.coord.y);
-
+		
+		/*
 		if (x < 60 || y < 60) {
 			$(this.ele).addClass('anim').css({
 				"-webkit-transform": "translate3d(" + initCoord.x + "px ," + initCoord.y + "px ,0)",
@@ -58,7 +59,7 @@
 				x: this.coord.x,
 				y: this.coord.y
 			};
-		}
+		}*/
 
 		console.log(this.orient);
 	});

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>搜狐视频客户端完美适配iOS8</title>
+		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="../dist/min.slip.js"></script>
+		<style type="text/css">
+			body{
+				background-color: #f2f4f5;
+				margin: 0;
+				padding: 0;
+			}
+
+			.page{
+				background-size: 100%;
+				background-repeat: no-repeat;
+				background-position: center center;
+				position: relative;
+			}
+			.page-1{
+				background-size: 50%;
+				background-position: center 30%;
+			}
+
+			.orient .page{
+				background-size: contain;
+			}
+			.orient .page-1{
+				background-size: 40%;
+			}
+
+			b{
+				position: absolute;
+				bottom: 15px;
+				left: 0;
+				right: 0;
+				height: 15px;
+				opacity: .4;
+				-webkit-transition: all .4s ease-in;
+				transition: all .4s ease-in;
+			}
+
+
+			b:before, b:after {
+				content: "";
+				display: block;
+				background: #000;
+				width: 2px;
+				height: 14px;
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				-webkit-transform: rotate(-55deg);
+				-webkit-transform-origin: 100% 100%;
+			}
+			b:after {
+				-webkit-transform: rotate(55deg);
+				-webkit-transform-origin: 0 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="wrap"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var isWindowOrient = (window.orientation || 0) === 0;
+
+		var wrap = document.getElementById('wrap');
+		var container = document.getElementById('container');
+		
+		if (isWindowOrient) {
+			container.className = 'orient';
+		}
+
+		var total = 5;
+		var init = false;
+
+		var html = [];
+
+		for (var i = 1; i < total + 1; i++) {
+			var _i = i === 5 ? 1 : i;
+
+			html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
+		}
+
+		wrap.innerHTML = html.join('');
+
+		var slip = Slip(wrap, 'y')
+			.webapp()
+			.end(function() {
+				var orient = this.orient.join('');
+
+				if (orient.indexOf('up') > -1) {
+					if (!init) {
+						document.getElementsByTagName('b')[0].style.opacity = '0';
+						init = true;
+					}
+				}
+			});
+
+	</script>
+</html>
