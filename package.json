@@ -1,0 +1,15 @@
+{
+  "name": "slip.js",
+  "version": "0.2.0",
+  "description": "移动端跟随手指滑动组件，零依赖。",
+  "keywords": [
+    "slip.js",
+    "slip",
+    "webapp",
+    "swipe"
+  ],
+  "dependencies": {
+    "docco": "~0.6.3",
+    "uglifyjs": "~2.3.6"
+  }
+}
