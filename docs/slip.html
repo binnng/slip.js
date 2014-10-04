@@ -1075,14 +1075,15 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
 <li>如果在超出时，反弹回去的时间不应为400ms</li>
 <li>反弹的距离 &lt; 页面的距离</li>
 <li>所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)</li>
-<li>即反弹的时长 &lt; 整页过渡的时长
-恩，这叫情怀</li>
+<li>即反弹的时长 &lt; 整页过渡的时长</li>
 </ol>
+<p>恩，这叫情怀</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> isOut <span class="hljs-keyword">is</span> <span class="hljs-literal">yes</span>
         duration *= <span class="hljs-keyword">if</span> isVerticalWebapp <span class="hljs-keyword">then</span> absFinger[Y] / <span class="hljs-property">@pageHeight</span> <span class="hljs-keyword">else</span> absFinger[X] / <span class="hljs-property">@pageWidth</span>
+        
         
       setTransition ele, <span class="hljs-string">"all <span class="hljs-subst">#{duration}</span>ms ease-in"</span>
 
