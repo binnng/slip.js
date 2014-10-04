@@ -97,7 +97,7 @@
       this.orient = [];
       this.isSlider = false;
       this.isWebapp = false;
-      this.duration = "400ms";
+      this.duration = "400";
     }
 
     Slip.prototype.start = function(fn) {
@@ -205,13 +205,15 @@
     };
 
     Slip.prototype.onSliderEnd = function(event) {
-      var css, ele, isDown, isLeft, isRight, isUp, isVerticalWebapp, orient, page, pageNum, trans;
+      var absFinger, duration, ele, isDown, isLeft, isOut, isRight, isUp, isVerticalWebapp, orient, page, pageNum, trans;
       orient = this.orient.join("");
-      css = "";
       trans = 0;
+      isOut = false;
       page = this.page;
       pageNum = this.pageNum;
       ele = this.ele;
+      duration = this.duration;
+      absFinger = this.absFinger;
       isUp = orient.indexOf(UP) > -1;
       isDown = orient.indexOf(DOWN) > -1;
       isLeft = orient.indexOf(LEFT) > -1;
@@ -234,11 +236,16 @@
       }
       if (page === pageNum) {
         page = pageNum - 1;
+        isOut = true;
       }
       if (page === -1) {
         page = 0;
+        isOut = true;
       }
-      setTransition(ele, "all " + this.duration + " ease-in");
+      if (isOut === true) {
+        duration *= isVerticalWebapp ? absFinger[Y] / this.pageHeight : absFinger[X] / this.pageWidth;
+      }
+      setTransition(ele, "all " + duration + "ms ease-in");
       if (isVerticalWebapp) {
         trans = "-" + (page * this.pageHeight);
         setTranslate(ele, 0, trans, 0);
@@ -394,7 +401,7 @@
     };
 
     Slip.prototype.time = function(duration) {
-      this.duration = (duration.replace("ms", "")) + "ms";
+      this.duration = String(duration).replace("ms", "");
       return this;
     };
 

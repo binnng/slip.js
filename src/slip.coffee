@@ -185,13 +185,13 @@
       # 只有设置webapp才有值
       @isWebapp = no
 
-      # 默认的滑屏过渡时间
+      # 默认的滑屏过渡时间，单位为ms
       # 这个值可以通过`time`方法来重置
       # ```
       # // 设置过度时间为200ms
       # Slip(ele, 'y').time(200);
       # ```
-      @duration = "400ms"
+      @duration = "400"
 
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @
@@ -319,13 +319,19 @@
 
     # 当滑动结束时，针对轮播器做些特别处理
     onSliderEnd: (event) ->
+      # 手指滑动的方向
       orient = @orient.join ""
-      css = ""
+
       trans = 0
+
+      # 是不是超出了，即第一页向前滑，最后一页向后滑
+      isOut = no
 
       page = @page
       pageNum = @pageNum
       ele = @ele
+      duration = @duration
+      absFinger = @absFinger
 
       isUp = orient.indexOf(UP) > -1
       isDown = orient.indexOf(DOWN) > -1
@@ -343,10 +349,25 @@
         page-- if isRight
 
       # 归位超出的页数
-      page = pageNum - 1  if page is pageNum
-      page = 0  if page is -1
+      if page is pageNum
+        page = pageNum - 1
+        isOut = yes
 
-      setTransition ele, "all #{@duration} ease-in"
+      if page is -1
+        page = 0
+        isOut = yes
+
+      # 这里做了个细节处理
+      # 1. 当用户定义整页滑动的时长为400ms
+      # 2. 如果在超出时，反弹回去的时间不应为400ms
+      # 3. 反弹的距离 < 页面的距离
+      # 4. 所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)
+      # 5. 即反弹的时长 < 整页过渡的时长
+      # 恩，这叫情怀
+      if isOut is yes
+        duration *= if isVerticalWebapp then absFinger[Y] / @pageHeight else absFinger[X] / @pageWidth
+        
+      setTransition ele, "all #{duration}ms ease-in"
 
       if isVerticalWebapp
         trans = "-#{page * @pageHeight}"
@@ -516,7 +537,7 @@
     # -----
     # 设置轮播时页面切换的过渡时长
     time: (duration) ->
-      @duration = (duration.replace "ms", "") + "ms"
+      @duration = String(duration).replace "ms", ""
 
       @
 
