@@ -1,25 +1,20 @@
-### ! CopyRight: binnng http://github.com/binnng/slip.js, Licensed under: MIT ###
+# ```
+# Slip.js 0.2.0
+# 
+# ! CopyRight: binnng http://github.com/binnng/slip.js
+# Licensed under: MIT
+# http://binnng.github.io/slip.js
+# ```
+
+
 ;((WIN, DOC) ->
 
+  # 定义
+  # ======
+
+  # 缓存，便于变量名压缩
   UNDEFINED = undefined
   NULL = null
-
-  # 滑动方向中最小允许距离
-  MIN_ALLOW_DISTANCE = 10
-
-  # 非滑动方向最大允许距离
-  MAX_OPP_ALLOW_DISTANCE = 40
-
-  # CSS前缀
-  CSS_PREFIX_MAP = [
-    "webkit"
-    "moz"
-    "ms"
-    "o"
-    ""
-  ]
-
-  NUMBER_REG = /\-?[0-9]+\.?[0-9]*/g
 
   X = "x"
   Y = "y"
@@ -30,34 +25,68 @@
   UP = "up"
   DOWN = "down"
 
+  # 滑动方向中最小允许距离
+  # 小于这个值不触发滑动
+  MIN_ALLOW_DISTANCE = 10
+
+  # 如果是单方向滑动
+  # 非滑动方向最大允许距离
+  MAX_OPP_ALLOW_DISTANCE = 40
+
+  # CSS的前缀
+  CSS_PREFIX_MAP = [
+    "webkit"
+    "moz"
+    "ms"
+    "o"
+    ""
+  ]
+
+  # 从一串包含数字的字符串中提取数字
+  # 用于在css值中提取偏移值
+  # ```
+  # transform: translate(-270px, 180px, 0);
+  # ```
+  NUMBER_REG = /\-?[0-9]+\.?[0-9]*/g
+
+  # 是不是触屏设备
+  # 如果是触屏设备使用`touch`事件，否则使用`mouse`事件
   IsTouch = 'ontouchend' of WIN
 
+  # 定义开始，进行，结束的事件名
   START_EVENT = if IsTouch then 'touchstart' else 'mousedown'
-
   MOVE_EVENT = if IsTouch then 'touchmove' else 'mousemove'
-
   END_EVENT = if IsTouch then 'touchend' else 'mouseup'
 
+  # 浏览器窗口的高度，宽度
   WINDOW_HEIGHT = WIN['innerHeight']
   WINDOW_WIDTH = WIN['innerWidth']
 
+  # 空函数
+  # 作为默认的回调函数
   noop = ->
 
+  # 方法
+  # ====
 
+  # 设置css的transition
+  # * `ele`: 原生的dom元素
+  # * `css`: transition的值
   setTransition = (ele, css) ->
     for prefix in CSS_PREFIX_MAP
       name = if prefix then "#{prefix}Transition" else "transition"
       ele.style[name] = css
 
-  ###
   # 设置元素的CSS位移
-  # ele 原生的DOM元素
-  ###
+  # * `ele`: 原生的DOM元素
+  # * `x|y|z`: 偏移的x, y, z
   setTranslate = (ele, x, y, z) ->
     for prefix in CSS_PREFIX_MAP
       name = if prefix then "#{prefix}Transform" else "transform"
       ele.style[name] = "translate3d(#{x or 0}px, #{y or 0}px, #{z or 0}px)"
 
+  # 获取元素的translate值
+  # * `ele`: 原生的dom元素
   getTranslate = (ele) ->
 
     translate = []
@@ -79,7 +108,10 @@
       y: translate[1] or 0
       z: translate[2] or 0
 
+  # Slip类
+  # =====
 
+  # 核心的`Slip`构造函数
   class Slip
 
     # 获取事件触发距离
@@ -102,26 +134,37 @@
 
     getCoordinates = if IsTouch then getCoordinatesArray[0] else getCoordinatesArray[1]
 
-
+    # 构造器
+    # * `ele`: 原生的dom元素，定义可以被滑动的元素
+    # * `direction`: 可被滑动的方向，有三个合法值`'x'`, `'y'`, `'xy'`，默认为 `'x'`
     constructor: (@ele, @direction) ->
 
       # 是不是被按下了，只有按下才允许移动
       @_isPressed = no
 
-      # 开始的回调
-      # 移动中回调
-      # 结束的回调
+      # * 开始的回调
+      # * 移动中回调
+      # * 结束的回调
       @onStart = @onMove = @onEnd = noop
       
-      # coord: 元素实际坐标值
-      # eventCoords: 手指的坐标，用于在各种事件中传递
-      # cacheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
-      # finger: 手指的位移
-      # absFinger: 手指位移的绝对值
+      # * `coord`: 元素实际坐标值
+      # * `eventCoords`: 手指的坐标，用于在各种事件中传递
+      # * `cacheCoords`: 当touchstart时候，缓存的当前位移，用于touchmove中计算
+      # * `finger`: 手指的位移
+      # * `absFinger`: 手指位移的绝对值
       @coord = @eventCoords = @cacheCoords = @finger = @absFinger = NULL
 
       # 结束后手指滑动的方向
-      # 数组 ['left'], ['left', 'up']
+      # 
+      # 这个值是个数组
+      # * 左滑: `['left']`
+      # * 右滑: `['right']`
+      # * 上滑: `['up']`
+      # * 下滑: `['down']`
+      # * 左上滑: `['left', 'up']`
+      # * 右上滑: `['right', 'up']`
+      # * 右下滑: `['right', 'down']`
+      # * 左下滑: `['left', 'down']`
       @orient = []
 
       # slider
@@ -131,11 +174,29 @@
       # 只有设置webapp才有值
       @isWebapp = no
 
+      # 默认的滑屏过渡时间
+      # 这个值可以通过`time`方法来重置
+      # ```
+      # // 设置过度时间为200ms
+      # Slip(ele, 'y').time(200);
+      # ```
+      @duration = "400ms"
+
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @
     end   : (fn) -> (@onEnd   = fn) and @
 
     # 设置元素坐标
+    # 如果元素初始化就有一定的偏移，就可以使用这个方法
+    # * `userCoords`: 一个坐标对象
+    # ```
+    # Slip(ele, 'x')
+    #   .setCoord({
+    #     x: 100,
+    #     y: 0,
+    #     z: 0
+    #   });
+    # ```
     setCoord: (userCoords) ->
       coords = @coord = 
         "x": userCoords[X] or 0
@@ -148,6 +209,7 @@
 
       @
 
+    # 触摸开始的回调
     onTouchStart: (event) ->
       @_isPressed = yes
 
@@ -161,6 +223,7 @@
       @onSliderStart event if @isSlider
       ret = @onStart.apply @, [event]
 
+    # 触摸进行中的回调
     onTouchMove: (event) ->
       event.preventDefault()
 
@@ -170,14 +233,16 @@
 
       direction = @direction
 
-      # 手指位移
-      # 左滑 finger.x < 0 右滑 finger.x > 0
-      # 上滑 finger.y < 0 下滑 finger.y > 0
+      # 手指偏移
+      # * 左滑 finger.x < 0
+      # * 右滑 finger.x > 0
+      # * 上滑 finger.y < 0
+      # * 下滑 finger.y > 0
       finger = @finger = 
         x: moveCoords.x - @eventCoords.x
         y: moveCoords.y - @eventCoords.y
 
-      # 手指位移绝对值
+      # 手指偏移的绝对值
       absFinger = @absFinger = 
         x: Math.abs finger.x
         y: Math.abs finger.y
@@ -200,14 +265,16 @@
 
       @orient = orient
 
-      # 用户返回，如果false，那就不继续了
+      # 执行用户定义的进行中回调
+      # 用户定义回调可以有返回值
+      # 如果返回值为`false`，那就不继续了
       ret = @onMove.apply @, [event]
 
       return no if ret is no
 
       ele = @ele
 
-      # 元素位移
+      # 元素的实际位移
       eleMove = @coord = 
         "x": if direction.indexOf(X) < 0 then @cacheCoords[X] else @cacheCoords[X] - 0 + finger.x
         "y": if direction.indexOf(Y) < 0 then @cacheCoords[Y] else @cacheCoords[Y] - 0 + finger.y
@@ -217,6 +284,7 @@
       # 在元素上标记位移
       ele.setAttribute attr, eleMove[attr] for attr of eleMove
 
+    # 触摸结束的回调
     onTouchEnd: (event) ->
       @_isPressed = no
 
@@ -225,16 +293,18 @@
       @onSliderEnd event if @isSlider
       ret = @onEnd.apply @, [event]
 
-      # 设置一次translate
-      # 防止用户改变了translate
+      # 结束后设置一次translate
+      # 防止用户在自己定义的回调中改变了translate的值
       trans = getTranslate this.ele
       @setCoord trans if trans
 
+      # 最后来清空手指滑动的方向
       @orient = []
 
     onSliderStart: (event) ->
       setTransition @ele, NULL
 
+    # 当滑动结束时，针对轮播器做些特别处理
     onSliderEnd: (event) ->
       orient = @orient.join ""
       css = ""
@@ -259,11 +329,11 @@
         page++ if isLeft
         page-- if isRight
 
-      # 归位超出
+      # 归位超出的页数
       page = pageNum - 1  if page is pageNum
       page = 0  if page is -1
 
-      setTransition ele, "all .4s ease-in"
+      setTransition ele, "all #{@duration} ease-in"
 
       if isVerticalWebapp
         trans = "-#{page * @pageHeight}"
@@ -278,7 +348,7 @@
     init: -> 
       @coord = "x": 0, "y": 0
 
-      # 之所以加上下划线方法，是为了给 destroy 用
+      # 之所以加上下划线方法，是为了给 `destroy` 用
       onTouchStart = @_onTouchStart = (event) => @onTouchStart event
       onTouchMove = @_onTouchMove = (event) => @onTouchMove event
       onTouchEnd = @_onTouchEnd= (event) => @onTouchEnd event
@@ -309,6 +379,12 @@
       @
 
     # 设置是个普通的轮播器
+    # `elPages`: 可接受三种类型的值
+    # 1. *String*: 传入一个选择器
+    # 2. *Array|类Array的Obejct*: 子元素列表
+    # 3. *undifined|null...* 传入空值，那就默认获取滑动元素的所有直接子元素（儿子）。
+    # 
+    # 推荐第二种做法。
     slider: (elPages)->
       ele = @ele
 
@@ -337,7 +413,8 @@
 
       @
 
-    # webapp
+    # 设置页面是个全屏的webapp
+    # 继承了slider，再做些特别处理。
     webapp: (elPages) ->
       @isWebapp = yes
 
@@ -356,6 +433,7 @@
       
       @
 
+    # 设置轮播器的高度
     height: (num)->
       ele = @ele
       elPages = @elPages
@@ -374,6 +452,7 @@
 
       @
 
+    # 设置轮播器的宽度
     width: (num)->
       ele = @ele
       elPages = @elPages
@@ -392,6 +471,7 @@
 
       @
 
+    # 设置全屏
     fullscreen: ->
 
       ele = @ele
@@ -407,6 +487,13 @@
 
       @
 
+    # 设置轮播时页面切换的过渡时长
+    time: (duration) ->
+      @duration = (duration.replace "ms", "") + "ms"
+
+      @
+
+  # 暴露到window的对象，内部实例化`Slip`
   slip = (ele, direction) ->
     instance = new Slip ele, direction or X
     instance.init()
