@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Slip.js : 移动端跟随手指滑动组件，零依赖。">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Slip.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/binnng/slip.js">View on GitHub</a>
+
+          <h1 id="project_title">Slip.js</h1>
+          <h2 id="project_tagline">移动端跟随手指滑动组件，零依赖。</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/binnng/slip.js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/binnng/slip.js/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="slipjs" class="anchor" href="#slipjs"><span class="octicon octicon-link"></span></a>slip.js</h1>
+
+<p>移动端跟随手指滑动组件，零依赖。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<p>手机访问：</p>
+
+<p><a href="http://binnng.github.io/slip.js/demo/sohutv-ios8.html">搜狐视频客户端完美适配iOS8</a></p>
+
+<p><a href="http://binnng.github.io/slip.js/demo/sohutv-ccnn.html">匆匆那年</a></p>
+
+<p>或扫描二维码访问：</p>
+
+<p>搜狐视频客户端完美适配iOS8</p>
+
+<p><img src="http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ios8.html&amp;size=6" alt="搜狐视频客户端完美适配iOS8"></p>
+
+<p>匆匆那年</p>
+
+<p><img src="http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ccnn.html&amp;size=6" alt="匆匆那年"></p>
+
+<h3>
+<a name="%E5%AE%89%E8%A3%85" class="anchor" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h3>
+
+<h4>
+<a name="%E4%BD%BF%E7%94%A8-bower-%E5%AE%89%E8%A3%85" class="anchor" href="#%E4%BD%BF%E7%94%A8-bower-%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>使用 <a href="http://bower.io/">bower</a> 安装</h4>
+
+<pre><code>$ bower install slip.binnng.js --save
+</code></pre>
+
+<p>更新版本</p>
+
+<pre><code>$ bower update
+</code></pre>
+
+<h4>
+<a name="%E4%BD%BF%E7%94%A8-yeoman-%E5%AE%89%E8%A3%85" class="anchor" href="#%E4%BD%BF%E7%94%A8-yeoman-%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>使用 <a href="http://yeoman.io/">Yeoman</a> 安装</h4>
+
+<pre><code>$ npm install -g generator-webapp-slip
+</code></pre>
+
+<pre><code>$ yo webapp-slip
+</code></pre>
+
+<h3>
+<a name="%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81" class="anchor" href="#%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81"><span class="octicon octicon-link"></span></a>简单代码</h3>
+
+<p>一个全屏可滑动的宣传网页：</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+
+<span class="c1">// 垂直滑动</span>
+<span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">).</span><span class="nx">webapp</span><span class="p">();</span>
+
+<span class="c1">// 水平滑动</span>
+<span class="c1">// Slip(ele, "x").webapp();</span>
+</pre></div>
+
+<p>一个可滑动的高度为200px的轮播器：</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+
+<span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">).</span><span class="nx">slider</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+
+</pre></div>
+
+<p>一个可滑动的元素，开始滑动，滑动中，结束滑动都有自己的定制：</p>
+
+<div class="highlight highlight-javascript"><pre>  <span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">mySlip</span> <span class="o">=</span> <span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"xy"</span><span class="p">);</span>
+
+  <span class="nx">mySlip</span>
+    <span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'start'</span><span class="p">);</span>
+
+      <span class="c1">// 事件对象</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+      <span class="c1">// 当前坐标值</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">coord</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">move</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'move'</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'end'</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">coord</span><span class="p">);</span>
+
+      <span class="c1">// 滑动方向</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">orient</span><span class="p">);</span>
+    <span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="%E6%96%87%E6%A1%A3" class="anchor" href="#%E6%96%87%E6%A1%A3"><span class="octicon octicon-link"></span></a>文档</h2>
+
+<h3>
+<a name="%E4%BD%BF%E7%94%A8" class="anchor" href="#%E4%BD%BF%E7%94%A8"><span class="octicon octicon-link"></span></a>使用</h3>
+
+<p>window下暴露了名为 <code>Slip</code> 的全局函数。</p>
+
+<h4>
+<a name="slip" class="anchor" href="#slip"><span class="octicon octicon-link"></span></a><code>Slip</code>
+</h4>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0" class="anchor" href="#%E5%8F%82%E6%95%B0"><span class="octicon octicon-link"></span></a>参数：</h6>
+
+<ul>
+<li>
+<code>el</code>: 原生的dom元素</li>
+<li>
+<code>direction</code>: <em>String</em>, 元素可滑动的方向，<code>"x"</code>, <code>"y"</code>, <code>"xy"</code>
+</li>
+</ul><div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">slip</span> <span class="o">=</span> <span class="nx">Slip</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="%E6%96%B9%E6%B3%95" class="anchor" href="#%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>方法</h4>
+
+<h5>
+<a name="setcoord" class="anchor" href="#setcoord"><span class="octicon octicon-link"></span></a><code>setCoord</code>
+</h5>
+
+<p>设置元素坐标位置</p>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-1" class="anchor" href="#%E5%8F%82%E6%95%B0-1"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<ul>
+<li>
+<code>coord</code>: <em>Object</em>, 元素坐标位置</li>
+</ul><div class="highlight highlight-javascript"><pre><span class="nx">slip</span><span class="p">.</span><span class="nx">setCoord</span><span class="p">({</span>
+  <span class="nx">x</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nx">y</span><span class="o">:</span> <span class="mi">0</span>
+<span class="p">});</span>
+</pre></div>
+
+<h5>
+<a name="destroy" class="anchor" href="#destroy"><span class="octicon octicon-link"></span></a><code>destroy</code>
+</h5>
+
+<p>销毁元素的滑动</p>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-2" class="anchor" href="#%E5%8F%82%E6%95%B0-2"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<p>无</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">slip</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+</pre></div>
+
+<h4>
+<a name="%E4%BA%8B%E4%BB%B6" class="anchor" href="#%E4%BA%8B%E4%BB%B6"><span class="octicon octicon-link"></span></a>事件</h4>
+
+<h5>
+<a name="start" class="anchor" href="#start"><span class="octicon octicon-link"></span></a><code>start</code>
+</h5>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-3" class="anchor" href="#%E5%8F%82%E6%95%B0-3"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<ul>
+<li>
+<code>fn</code>: <em>Funciton</em> 触碰开始的回调</li>
+</ul><h5>
+<a name="move" class="anchor" href="#move"><span class="octicon octicon-link"></span></a><code>move</code>
+</h5>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-4" class="anchor" href="#%E5%8F%82%E6%95%B0-4"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<ul>
+<li>
+<code>fn</code>: <em>Function</em> 触碰进行中的回调</li>
+</ul><h5>
+<a name="end" class="anchor" href="#end"><span class="octicon octicon-link"></span></a><code>end</code>
+</h5>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-5" class="anchor" href="#%E5%8F%82%E6%95%B0-5"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<ul>
+<li>
+<code>fn</code>: <em>Function</em> 触碰结束的回调</li>
+</ul><h4>
+<a name="%E5%B1%9E%E6%80%A7" class="anchor" href="#%E5%B1%9E%E6%80%A7"><span class="octicon octicon-link"></span></a>属性</h4>
+
+<h5>
+<a name="coord" class="anchor" href="#coord"><span class="octicon octicon-link"></span></a><code>coord</code>
+</h5>
+
+<p><em>Object</em> 元素的坐标值</p>
+
+<ul>
+<li>
+<code>coord.x</code>: x坐标值</li>
+<li>
+<code>coord.y</code>: y坐标值</li>
+</ul><h5>
+<a name="finger" class="anchor" href="#finger"><span class="octicon octicon-link"></span></a><code>finger</code>
+</h5>
+
+<p><em>Object</em> 手指的偏移</p>
+
+<ul>
+<li>
+<code>finger.x</code>: x偏移值</li>
+<li>
+<code>finger.y</code>: y偏移值</li>
+</ul><h5>
+<a name="orient" class="anchor" href="#orient"><span class="octicon octicon-link"></span></a><code>orient</code>
+</h5>
+
+<p><em>Array</em> 手指滑动的方向，这个值会在手指滑动过程中变化</p>
+
+<p><strong>注意：<code>orient</code>的值是数组</strong></p>
+
+<ul>
+<li>左滑: <code>['left']</code>
+</li>
+<li>右滑: <code>['right']</code>
+</li>
+<li>上滑: <code>['up']</code>
+</li>
+<li>下滑: <code>['down']</code>
+</li>
+<li>左上滑: <code>['left', 'up']</code>
+</li>
+<li>右上滑: <code>['right', 'up']</code>
+</li>
+<li>右下滑: <code>['right', 'down']</code>
+</li>
+<li>左下滑: <code>['left', 'down']</code>
+</li>
+</ul><h3>
+<a name="%E8%BD%AE%E6%92%AD%E5%99%A8" class="anchor" href="#%E8%BD%AE%E6%92%AD%E5%99%A8"><span class="octicon octicon-link"></span></a>轮播器</h3>
+
+<h4>
+<a name="%E6%96%B9%E6%B3%95-1" class="anchor" href="#%E6%96%B9%E6%B3%95-1"><span class="octicon octicon-link"></span></a>方法</h4>
+
+<h5>
+<a name="slider" class="anchor" href="#slider"><span class="octicon octicon-link"></span></a><code>slider</code>
+</h5>
+
+<p>设置轮播器</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">).</span><span class="nx">slider</span><span class="p">();</span>
+</pre></div>
+
+<h6>
+<a name="%E5%8F%82%E6%95%B0-6" class="anchor" href="#%E5%8F%82%E6%95%B0-6"><span class="octicon octicon-link"></span></a>参数</h6>
+
+<ul>
+<li>
+<code>elPages</code>: <em>String|NodeList|空</em>，可滑动容器（指的是传个Slip方法的dom元素）内的子元素，可以传一个CSS选择器（String），也可以传子元素列表（nodeList），也可以传空，传空情况下会取所有容器内的子元素。</li>
+</ul><h4>
+<a name="height" class="anchor" href="#height"><span class="octicon octicon-link"></span></a><code>height</code>
+</h4>
+
+<p>设置轮播器的高度</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">).</span><span class="nx">slider</span><span class="p">().</span><span class="nx">height</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+</pre></div>
+
+<h5>
+<a name="%E5%8F%82%E6%95%B0-7" class="anchor" href="#%E5%8F%82%E6%95%B0-7"><span class="octicon octicon-link"></span></a>参数</h5>
+
+<ul>
+<li>
+<code>num</code>: <em>Number|String</em>, 高度值，数字或者带有px的值。</li>
+</ul><h4>
+<a name="width" class="anchor" href="#width"><span class="octicon octicon-link"></span></a><code>width</code>
+</h4>
+
+<p>设置轮播器的宽度</p>
+
+<h5>
+<a name="%E5%8F%82%E6%95%B0-8" class="anchor" href="#%E5%8F%82%E6%95%B0-8"><span class="octicon octicon-link"></span></a>参数</h5>
+
+<ul>
+<li>
+<code>num</code>: <em>Number|String</em>, 宽度值，数字或者带有px的值。</li>
+</ul><h4>
+<a name="%E5%B1%9E%E6%80%A7-1" class="anchor" href="#%E5%B1%9E%E6%80%A7-1"><span class="octicon octicon-link"></span></a>属性</h4>
+
+<h5>
+<a name="page" class="anchor" href="#page"><span class="octicon octicon-link"></span></a><code>page</code>
+</h5>
+
+<p>当前轮播器在第几页</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">).</span><span class="nx">end</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">page</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="webapp-%E5%85%A8%E5%B1%8F%E7%BD%91%E9%A1%B5" class="anchor" href="#webapp-%E5%85%A8%E5%B1%8F%E7%BD%91%E9%A1%B5"><span class="octicon octicon-link"></span></a>Webapp 全屏网页</h3>
+
+<p>如<a href="http://binnng.github.io/slip.js/demo/sohutv-ios8.html">搜狐视频客户端完美适配iOS8</a>这种形式的网页。</p>
+
+<h4>
+<a name="%E6%96%B9%E6%B3%95-2" class="anchor" href="#%E6%96%B9%E6%B3%95-2"><span class="octicon octicon-link"></span></a>方法</h4>
+
+<h5>
+<a name="webapp" class="anchor" href="#webapp"><span class="octicon octicon-link"></span></a><code>webapp</code>
+</h5>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">).</span><span class="nx">webapp</span><span class="p">();</span>
+</pre></div>
+
+<h3>
+<a name="%E6%BA%90%E7%A0%81" class="anchor" href="#%E6%BA%90%E7%A0%81"><span class="octicon octicon-link"></span></a>源码</h3>
+
+<p>源码用<code>CoffeeScript</code>书写，<code>slip.js</code>为其生成代码。</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Slip.js maintained by <a href="https://github.com/binnng">binnng</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
