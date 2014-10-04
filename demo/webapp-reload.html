@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<title>A Demo Of Webapp</title>
+		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="../dist/min.slip.js"></script>
+		<style type="text/css">
+			body{
+				background-color: #f2f4f5;
+				margin: 0;
+				padding: 0;
+			}
+			img{
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+		  <div class="page page-1"><img src="images/sohutv-ios8/1.jpg"></div>
+		  <div class="page page-2"><img src="images/sohutv-ios8/2.jpg"></div>
+		  <div class="page page-3"><img src="images/sohutv-ios8/3.jpg"></div>
+		  <div class="page page-4"><img src="images/sohutv-ios8/4.jpg"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Slip(document.getElementById('container'), 'y').webapp().end(function() {
+  		if (this.page === 3) location.reload();
+		});
+	</script>
+</html>
