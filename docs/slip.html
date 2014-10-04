@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>slip.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>slip.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h2 id="-copyright-binnng-http-github-com-binnng-slip-js-licensed-under-mit">! CopyRight: binnng <a href="http://github.com/binnng/slip.js">http://github.com/binnng/slip.js</a>, Licensed under: MIT</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>;<span class="hljs-function">(<span class="hljs-params">(WIN, DOC)</span> -&gt;</span>
+
+  UNDEFINED = <span class="hljs-literal">undefined</span>
+  NULL = <span class="hljs-literal">null</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>滑动方向中最小允许距离</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  MIN_ALLOW_DISTANCE = <span class="hljs-number">10</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>非滑动方向最大允许距离</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  MAX_OPP_ALLOW_DISTANCE = <span class="hljs-number">40</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>CSS前缀</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  CSS_PREFIX_MAP = [
+    <span class="hljs-string">"webkit"</span>
+    <span class="hljs-string">"moz"</span>
+    <span class="hljs-string">"ms"</span>
+    <span class="hljs-string">"o"</span>
+    <span class="hljs-string">""</span>
+  ]
+
+  NUMBER_REG = <span class="hljs-regexp">/\-?[0-9]+\.?[0-9]*/g</span>
+
+  X = <span class="hljs-string">"x"</span>
+  Y = <span class="hljs-string">"y"</span>
+  XY = <span class="hljs-string">"xy"</span>
+
+  LEFT = <span class="hljs-string">"left"</span>
+  RIGHT = <span class="hljs-string">"right"</span>
+  UP = <span class="hljs-string">"up"</span>
+  DOWN = <span class="hljs-string">"down"</span>
+
+  IsTouch = <span class="hljs-string">'ontouchend'</span> <span class="hljs-keyword">of</span> WIN
+
+  START_EVENT = <span class="hljs-keyword">if</span> IsTouch <span class="hljs-keyword">then</span> <span class="hljs-string">'touchstart'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'mousedown'</span>
+
+  MOVE_EVENT = <span class="hljs-keyword">if</span> IsTouch <span class="hljs-keyword">then</span> <span class="hljs-string">'touchmove'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'mousemove'</span>
+
+  END_EVENT = <span class="hljs-keyword">if</span> IsTouch <span class="hljs-keyword">then</span> <span class="hljs-string">'touchend'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'mouseup'</span>
+
+  WINDOW_HEIGHT = WIN[<span class="hljs-string">'innerHeight'</span>]
+  WINDOW_WIDTH = WIN[<span class="hljs-string">'innerWidth'</span>]
+<span class="hljs-function">
+  <span class="hljs-title">noop</span> = -&gt;</span>
+<span class="hljs-function">
+
+  <span class="hljs-title">setTransition</span> = <span class="hljs-params">(ele, css)</span> -&gt;</span>
+    <span class="hljs-keyword">for</span> prefix <span class="hljs-keyword">in</span> CSS_PREFIX_MAP
+      name = <span class="hljs-keyword">if</span> prefix <span class="hljs-keyword">then</span> <span class="hljs-string">"<span class="hljs-subst">#{prefix}</span>Transition"</span> <span class="hljs-keyword">else</span> <span class="hljs-string">"transition"</span>
+      ele.style[name] = css</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h1 id="-">#</h1>
+<p>设置元素的CSS位移
+ele 原生的DOM元素</p>
+<h1 id="-">#</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function">  <span class="hljs-title">setTranslate</span> = <span class="hljs-params">(ele, x, y, z)</span> -&gt;</span>
+    <span class="hljs-keyword">for</span> prefix <span class="hljs-keyword">in</span> CSS_PREFIX_MAP
+      name = <span class="hljs-keyword">if</span> prefix <span class="hljs-keyword">then</span> <span class="hljs-string">"<span class="hljs-subst">#{prefix}</span>Transform"</span> <span class="hljs-keyword">else</span> <span class="hljs-string">"transform"</span>
+      ele.style[name] = <span class="hljs-string">"translate3d(<span class="hljs-subst">#{x <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>}</span>px, <span class="hljs-subst">#{y <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>}</span>px, <span class="hljs-subst">#{z <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>}</span>px)"</span>
+<span class="hljs-function">
+  <span class="hljs-title">getTranslate</span> = <span class="hljs-params">(ele)</span> -&gt;</span>
+
+    translate = []
+    css = <span class="hljs-string">''</span>
+    coord = <span class="hljs-string">''</span>
+
+    <span class="hljs-keyword">for</span> prefix <span class="hljs-keyword">in</span> CSS_PREFIX_MAP
+      name = <span class="hljs-keyword">if</span> prefix <span class="hljs-keyword">then</span> <span class="hljs-string">"<span class="hljs-subst">#{prefix}</span>Transform"</span> <span class="hljs-keyword">else</span> <span class="hljs-string">"transform"</span>
+
+      css = ele.style[name]
+
+      <span class="hljs-keyword">if</span> css <span class="hljs-keyword">and</span> <span class="hljs-keyword">typeof</span> css <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span>
+        coord = css.match(<span class="hljs-regexp">/\((.*)\)/g</span>)[<span class="hljs-number">0</span>]
+        translate = coord <span class="hljs-keyword">and</span> coord.match NUMBER_REG
+        <span class="hljs-keyword">break</span>
+
+    <span class="hljs-keyword">if</span> translate.length
+      <span class="hljs-attribute">x</span>: translate[<span class="hljs-number">0</span>] <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+      <span class="hljs-attribute">y</span>: translate[<span class="hljs-number">1</span>] <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+      <span class="hljs-attribute">z</span>: translate[<span class="hljs-number">2</span>] <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+
+
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slip</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>获取事件触发距离
+处理一堆兼容</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getCoordinatesArray = [</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>移动端设备</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function">      <span class="hljs-params">(event)</span> -&gt;</span>
+        touches = event.touches <span class="hljs-keyword">and</span> ((<span class="hljs-keyword">if</span> event.touches.length <span class="hljs-keyword">then</span> event.touches <span class="hljs-keyword">else</span> [event]))
+        e = (event.changedTouches <span class="hljs-keyword">and</span> event.changedTouches[<span class="hljs-number">0</span>]) <span class="hljs-keyword">or</span> (event.originalEvent <span class="hljs-keyword">and</span> event.originalEvent.changedTouches <span class="hljs-keyword">and</span> event.originalEvent.changedTouches[<span class="hljs-number">0</span>]) <span class="hljs-keyword">or</span> touches[<span class="hljs-number">0</span>].originalEvent <span class="hljs-keyword">or</span> touches[<span class="hljs-number">0</span>]
+        <span class="hljs-string">"x"</span>: e.clientX
+        <span class="hljs-string">"y"</span>: e.clientY</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>pc设备</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function">      <span class="hljs-params">(event)</span> -&gt;</span>
+        e = event
+        <span class="hljs-string">"x"</span>: e.clientX
+        <span class="hljs-string">"y"</span>: e.clientY
+    ]
+
+    getCoordinates = <span class="hljs-keyword">if</span> IsTouch <span class="hljs-keyword">then</span> getCoordinatesArray[<span class="hljs-number">0</span>] <span class="hljs-keyword">else</span> getCoordinatesArray[<span class="hljs-number">1</span>]
+
+
+    <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@ele</span>, <span class="hljs-property">@direction</span>)</span> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>是不是被按下了，只有按下才允许移动</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_isPressed</span> = <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>开始的回调
+移动中回调
+结束的回调</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@onStart</span> = <span class="hljs-property">@onMove</span> = <span class="hljs-property">@onEnd</span> = noop</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>coord: 元素实际坐标值
+eventCoords: 手指的坐标，用于在各种事件中传递
+cacheCoords: 当touchstart时候，缓存的当前位移，用于touchmove中计算
+finger: 手指的位移
+absFinger: 手指位移的绝对值</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@coord</span> = <span class="hljs-property">@eventCoords</span> = <span class="hljs-property">@cacheCoords</span> = <span class="hljs-property">@finger</span> = <span class="hljs-property">@absFinger</span> = NULL</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>结束后手指滑动的方向
+数组 [‘left’], [‘left’, ‘up’]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@orient</span> = []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>slider</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@isSlider</span> = <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>webapp当前页
+只有设置webapp才有值</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@isWebapp</span> = <span class="hljs-literal">no</span>
+
+    start : <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span> (<span class="hljs-property">@onStart</span> = fn) <span class="hljs-keyword">and</span> @
+    move  : <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span> (<span class="hljs-property">@onMove</span>  = fn) <span class="hljs-keyword">and</span> @
+    end   : <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span> (<span class="hljs-property">@onEnd</span>   = fn) <span class="hljs-keyword">and</span> @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>设置元素坐标</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">setCoord</span>: <span class="hljs-function"><span class="hljs-params">(userCoords)</span> -&gt;</span>
+      coords = <span class="hljs-property">@coord</span> = 
+        <span class="hljs-string">"x"</span>: userCoords[X] <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+        <span class="hljs-string">"y"</span>: userCoords[Y] <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+
+      ele = <span class="hljs-property">@ele</span>
+
+      setTranslate ele, coords[X], coords[Y]
+      ele.setAttribute attr, coords[attr] <span class="hljs-keyword">for</span> attr <span class="hljs-keyword">of</span> coords
+
+      @
+
+    <span class="hljs-attribute">onTouchStart</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+      <span class="hljs-property">@_isPressed</span> = <span class="hljs-literal">yes</span>
+
+      <span class="hljs-property">@eventCoords</span> = getCoordinates event
+
+      <span class="hljs-property">@cacheCoords</span> = <span class="hljs-property">@coord</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>清空手指位移</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@finger</span> = <span class="hljs-property">@absFinger</span> = NULL
+
+      <span class="hljs-property">@onSliderStart</span> event <span class="hljs-keyword">if</span> <span class="hljs-property">@isSlider</span>
+      ret = <span class="hljs-property">@onStart</span>.apply @, [event]
+
+    <span class="hljs-attribute">onTouchMove</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+      event.preventDefault()
+
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_isPressed</span>
+
+      moveCoords = getCoordinates event
+
+      direction = <span class="hljs-property">@direction</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>手指位移
+左滑 finger.x &lt; 0 右滑 finger.x &gt; 0
+上滑 finger.y &lt; 0 下滑 finger.y &gt; 0</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      finger = <span class="hljs-property">@finger</span> = 
+        <span class="hljs-attribute">x</span>: moveCoords.x - <span class="hljs-property">@eventCoords</span>.x
+        <span class="hljs-attribute">y</span>: moveCoords.y - <span class="hljs-property">@eventCoords</span>.y</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>手指位移绝对值</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      absFinger = <span class="hljs-property">@absFinger</span> = 
+        <span class="hljs-attribute">x</span>: Math.abs finger.x
+        <span class="hljs-attribute">y</span>: Math.abs finger.y</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>单方向滑动时，小于正方向最小距离，大于反方向最大距离，不是正确的手指行为</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> direction <span class="hljs-keyword">isnt</span> XY</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>反方向</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        oppDirection = <span class="hljs-keyword">if</span> direction <span class="hljs-keyword">is</span> X <span class="hljs-keyword">then</span> Y <span class="hljs-keyword">else</span> X
+
+        <span class="hljs-keyword">if</span> absFinger[direction] &lt; MIN_ALLOW_DISTANCE <span class="hljs-keyword">or</span> absFinger[oppDirection] &gt; MAX_OPP_ALLOW_DISTANCE
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>手指移动方向</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      orient = []
+      <span class="hljs-keyword">if</span> absFinger.x &gt; MIN_ALLOW_DISTANCE
+        orient.push <span class="hljs-keyword">if</span> finger.x &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> LEFT <span class="hljs-keyword">else</span> RIGHT
+
+      <span class="hljs-keyword">if</span> absFinger.y &gt; MIN_ALLOW_DISTANCE
+        orient.push <span class="hljs-keyword">if</span> finger.y &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> UP <span class="hljs-keyword">else</span> DOWN
+
+      <span class="hljs-property">@orient</span> = orient</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>用户返回，如果false，那就不继续了</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ret = <span class="hljs-property">@onMove</span>.apply @, [event]
+
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span> <span class="hljs-keyword">if</span> ret <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+
+      ele = <span class="hljs-property">@ele</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>元素位移</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      eleMove = <span class="hljs-property">@coord</span> = 
+        <span class="hljs-string">"x"</span>: <span class="hljs-keyword">if</span> direction.indexOf(X) &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@cacheCoords</span>[X] <span class="hljs-keyword">else</span> <span class="hljs-property">@cacheCoords</span>[X] - <span class="hljs-number">0</span> + finger.x
+        <span class="hljs-string">"y"</span>: <span class="hljs-keyword">if</span> direction.indexOf(Y) &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@cacheCoords</span>[Y] <span class="hljs-keyword">else</span> <span class="hljs-property">@cacheCoords</span>[Y] - <span class="hljs-number">0</span> + finger.y
+
+      setTranslate ele, eleMove[X], eleMove[Y]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>在元素上标记位移</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ele.setAttribute attr, eleMove[attr] <span class="hljs-keyword">for</span> attr <span class="hljs-keyword">of</span> eleMove
+
+    <span class="hljs-attribute">onTouchEnd</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+      <span class="hljs-property">@_isPressed</span> = <span class="hljs-literal">no</span>
+
+      ele = <span class="hljs-property">@ele</span>
+
+      <span class="hljs-property">@onSliderEnd</span> event <span class="hljs-keyword">if</span> <span class="hljs-property">@isSlider</span>
+      ret = <span class="hljs-property">@onEnd</span>.apply @, [event]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>设置一次translate
+防止用户改变了translate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      trans = getTranslate <span class="hljs-keyword">this</span>.ele
+      <span class="hljs-property">@setCoord</span> trans <span class="hljs-keyword">if</span> trans
+
+      <span class="hljs-property">@orient</span> = []
+
+    <span class="hljs-attribute">onSliderStart</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+      setTransition <span class="hljs-property">@ele</span>, NULL
+
+    <span class="hljs-attribute">onSliderEnd</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+      orient = <span class="hljs-property">@orient</span>.join <span class="hljs-string">""</span>
+      css = <span class="hljs-string">""</span>
+      trans = <span class="hljs-number">0</span>
+
+      page = <span class="hljs-property">@page</span>
+      pageNum = <span class="hljs-property">@pageNum</span>
+      ele = <span class="hljs-property">@ele</span>
+
+      isUp = orient.indexOf(UP) &gt; -<span class="hljs-number">1</span>
+      isDown = orient.indexOf(DOWN) &gt; -<span class="hljs-number">1</span>
+      isLeft = orient.indexOf(LEFT) &gt; -<span class="hljs-number">1</span>
+      isRight = orient.indexOf(RIGHT) &gt; -<span class="hljs-number">1</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>是不是垂直滑动</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      isVerticalWebapp = <span class="hljs-property">@direction</span> <span class="hljs-keyword">is</span> Y
+
+      <span class="hljs-keyword">if</span> isVerticalWebapp
+        page++ <span class="hljs-keyword">if</span> isUp
+        page-- <span class="hljs-keyword">if</span> isDown
+      <span class="hljs-keyword">else</span> 
+        page++ <span class="hljs-keyword">if</span> isLeft
+        page-- <span class="hljs-keyword">if</span> isRight</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>归位超出</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      page = pageNum - <span class="hljs-number">1</span>  <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> pageNum
+      page = <span class="hljs-number">0</span>  <span class="hljs-keyword">if</span> page <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span>
+
+      setTransition ele, <span class="hljs-string">"all .4s ease-in"</span>
+
+      <span class="hljs-keyword">if</span> isVerticalWebapp
+        trans = <span class="hljs-string">"-<span class="hljs-subst">#{page * <span class="hljs-property">@pageHeight</span>}</span>"</span>
+        setTranslate ele, <span class="hljs-number">0</span>, trans, <span class="hljs-number">0</span>
+      <span class="hljs-keyword">else</span>
+        trans = <span class="hljs-string">"-<span class="hljs-subst">#{page * <span class="hljs-property">@pageWidth</span>}</span>"</span>
+        setTranslate ele, trans, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>
+
+      <span class="hljs-property">@page</span> = page</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>初始化</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span> 
+      <span class="hljs-property">@coord</span> = <span class="hljs-string">"x"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"y"</span>: <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>之所以加上下划线方法，是为了给 destroy 用</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      onTouchStart = <span class="hljs-property">@_onTouchStart</span> = <span class="hljs-function"><span class="hljs-params">(event)</span> =&gt;</span> <span class="hljs-property">@onTouchStart</span> event
+      onTouchMove = <span class="hljs-property">@_onTouchMove</span> = <span class="hljs-function"><span class="hljs-params">(event)</span> =&gt;</span> <span class="hljs-property">@onTouchMove</span> event
+      onTouchEnd = <span class="hljs-property">@_onTouchEnd</span>= <span class="hljs-function"><span class="hljs-params">(event)</span> =&gt;</span> <span class="hljs-property">@onTouchEnd</span> event
+
+      ele = <span class="hljs-property">@ele</span>
+      ele.addEventListener START_EVENT, onTouchStart, <span class="hljs-literal">no</span>
+      ele.addEventListener MOVE_EVENT, onTouchMove, <span class="hljs-literal">no</span>
+      ele.addEventListener END_EVENT, onTouchEnd, <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>初始化元素位移</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      initMove = <span class="hljs-property">@coord</span> = <span class="hljs-string">"x"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"y"</span>: <span class="hljs-number">0</span>
+
+      direction = <span class="hljs-property">@direction</span>
+      setTranslate ele, initMove[X], initMove[Y]
+
+      ele.setAttribute attr, initMove[attr] <span class="hljs-keyword">for</span> attr <span class="hljs-keyword">of</span> initMove
+
+      @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>摧毁元素的滑动</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">destroy</span>:<span class="hljs-function"> -&gt;</span>
+
+      ele = <span class="hljs-property">@ele</span>
+      ele.removeEventListener START_EVENT, <span class="hljs-property">@_onTouchStart</span>, <span class="hljs-literal">no</span>
+      ele.removeEventListener MOVE_EVENT, <span class="hljs-property">@_onTouchMove</span>, <span class="hljs-literal">no</span>
+      ele.removeEventListener END_EVENT, <span class="hljs-property">@_onTouchEnd</span>, <span class="hljs-literal">no</span>
+
+      @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>设置是个普通的轮播器</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">slider</span>: <span class="hljs-function"><span class="hljs-params">(elPages)</span>-&gt;</span>
+      ele = <span class="hljs-property">@ele</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>如果传入了选择器</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> elPages <span class="hljs-keyword">is</span> <span class="hljs-string">"string"</span>
+        elPages = ele.querySelectorAll(elPages)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>传入为空</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> elPages
+        elPages = []
+        elChilds = ele.childNodes
+
+        <span class="hljs-keyword">for</span> elChild <span class="hljs-keyword">in</span> elChilds
+          elPages.push elChild <span class="hljs-keyword">if</span> elChild.nodeType <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
+
+      <span class="hljs-property">@isSlider</span> = <span class="hljs-literal">yes</span>
+      <span class="hljs-property">@page</span> = <span class="hljs-number">0</span>
+      <span class="hljs-property">@elPages</span> = elPages
+
+      elPagesLen = elPages.length
+      pageNum = <span class="hljs-property">@pageNum</span> = <span class="hljs-keyword">if</span> elPagesLen <span class="hljs-keyword">then</span> elPagesLen <span class="hljs-keyword">else</span> <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>横向滑动</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> <span class="hljs-property">@direction</span> <span class="hljs-keyword">is</span> X
+        elPage.style.cssFloat = LEFT <span class="hljs-keyword">for</span> elPage <span class="hljs-keyword">in</span> elPages
+
+      @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>webapp</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">webapp</span>: <span class="hljs-function"><span class="hljs-params">(elPages)</span> -&gt;</span>
+      <span class="hljs-property">@isWebapp</span> = <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>如果是webapp肯定全屏</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      @.slider(elPages).fullscreen()
+
+      elPages = <span class="hljs-property">@elPages</span>
+      ele = <span class="hljs-property">@ele</span>
+      pageNum = <span class="hljs-property">@pageNum</span>
+
+      ele.style.height = <span class="hljs-string">"<span class="hljs-subst">#{WINDOW_HEIGHT * pageNum}</span>px"</span>
+      <span class="hljs-property">@height</span> WINDOW_HEIGHT</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>横向滑动的webapp</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@width</span> WINDOW_WIDTH <span class="hljs-keyword">if</span> <span class="hljs-property">@direction</span> <span class="hljs-keyword">is</span> X
+      
+      @
+
+    <span class="hljs-attribute">height</span>: <span class="hljs-function"><span class="hljs-params">(num)</span>-&gt;</span>
+      ele = <span class="hljs-property">@ele</span>
+      elPages = <span class="hljs-property">@elPages</span>
+      pageNum = <span class="hljs-property">@pageNum</span>
+      num = String(num).replace <span class="hljs-string">"px"</span>, <span class="hljs-string">""</span>
+
+      <span class="hljs-keyword">if</span> num <span class="hljs-keyword">is</span> <span class="hljs-string">"100%"</span>
+        num = WINDOW_HEIGHT
+
+      <span class="hljs-property">@pageHeight</span> = num
+
+      <span class="hljs-keyword">if</span> <span class="hljs-property">@direction</span> <span class="hljs-keyword">is</span> X
+        ele.style.height = <span class="hljs-string">"<span class="hljs-subst">#{num}</span>px"</span>
+
+      elPage.style.height = <span class="hljs-string">"<span class="hljs-subst">#{num}</span>px"</span> <span class="hljs-keyword">for</span> elPage <span class="hljs-keyword">in</span> elPages
+
+      @
+
+    <span class="hljs-attribute">width</span>: <span class="hljs-function"><span class="hljs-params">(num)</span>-&gt;</span>
+      ele = <span class="hljs-property">@ele</span>
+      elPages = <span class="hljs-property">@elPages</span>
+      pageNum = <span class="hljs-property">@pageNum</span>
+      num = String(num).replace <span class="hljs-string">"px"</span>, <span class="hljs-string">""</span>
+
+      <span class="hljs-keyword">if</span> num <span class="hljs-keyword">is</span> <span class="hljs-string">"100%"</span>
+        num = WINDOW_WIDTH
+
+      <span class="hljs-property">@pageWidth</span> = num
+
+      <span class="hljs-keyword">if</span> <span class="hljs-property">@direction</span> <span class="hljs-keyword">is</span> X
+        ele.style.width = <span class="hljs-string">"<span class="hljs-subst">#{num * pageNum}</span>px"</span>
+
+      elPage.style.width = <span class="hljs-string">"<span class="hljs-subst">#{num}</span>px"</span> <span class="hljs-keyword">for</span> elPage <span class="hljs-keyword">in</span> elPages
+
+      @
+
+    <span class="hljs-attribute">fullscreen</span>:<span class="hljs-function"> -&gt;</span>
+
+      ele = <span class="hljs-property">@ele</span>
+      child = ele
+
+      <span class="hljs-keyword">while</span> parent = child.parentNode
+
+        <span class="hljs-keyword">if</span> parent.nodeType <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
+          parent.style.height = <span class="hljs-string">"100%"</span>
+          parent.style.overflow = <span class="hljs-string">"hidden"</span>
+
+        child = parent
+
+      @
+<span class="hljs-function">
+  <span class="hljs-title">slip</span> = <span class="hljs-params">(ele, direction)</span> -&gt;</span>
+    instance = <span class="hljs-keyword">new</span> Slip ele, direction <span class="hljs-keyword">or</span> X
+    instance.init()
+
+  WIN.Slip = slip
+
+) <span class="hljs-built_in">window</span>, <span class="hljs-built_in">document</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
