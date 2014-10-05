@@ -1,6 +1,6 @@
 {
   "name": "slip.binnng.js",
-  "main": "min.slip.js",
+  "main": "dist/min.slip.js",
   "version": "0.0.1",
   "homepage": "https://github.com/binnng/slip.js",
   "authors": [
@@ -15,7 +15,9 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "demo.html"
+    "demo",
+    "docs",
+    "Makefile",
+    "package.json"
   ]
 }
