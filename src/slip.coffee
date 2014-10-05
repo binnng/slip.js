@@ -6,6 +6,7 @@
 # http://binnng.github.io/slip.js
 # ```
 
+# Fork me on [Github!](https://github.com/binnng/slip.js)
 
 ;((WIN, DOC) ->
 
