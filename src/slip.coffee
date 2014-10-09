@@ -6,6 +6,7 @@
 # http://binnng.github.io/slip.js
 # ```
 
+# Fork me on [Github!](https://github.com/binnng/slip.js)
 
 ;((WIN, DOC) ->
 
@@ -84,6 +85,7 @@
       ele.style[name] = css
 
   # setTranslate
+  # -----
   # 设置元素的CSS位移
   # * `ele`: 原生的DOM元素
   # * `x|y|z`: 偏移的x, y, z
