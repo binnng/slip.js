@@ -8,7 +8,7 @@
 
 # Fork me on [Github!](https://github.com/binnng/slip.js)
 
-;((WIN, DOC) ->
+((WIN, DOC) ->
 
   # 定义
   # ======
