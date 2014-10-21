@@ -68,42 +68,51 @@
 		<div id="container">
 			<div id="wrap"></div>
 		</div>
-	</body>
-	<script type="text/javascript">
-		var isWindowOrient = (window.orientation || 0) === 0;
+		<script type="text/javascript">
+			var isWindowOrient = (window.orientation || 0) === 0;
 
-		var wrap = document.getElementById('wrap');
-		var container = document.getElementById('container');
-		
-		if (isWindowOrient) {
-			container.className = 'orient';
-		}
+			var wrap = document.getElementById('wrap');
+			var container = document.getElementById('container');
+			
+			if (isWindowOrient) {
+				container.className = 'orient';
+			}
 
-		var total = 5;
-		var init = false;
+			var total = 5;
+			var init = false;
 
-		var html = [];
+			var html = [];
 
-		for (var i = 1; i < total + 1; i++) {
-			var _i = i === 5 ? 1 : i;
+			for (var i = 1; i < total + 1; i++) {
+				var _i = i === 5 ? 1 : i;
 
-			html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
-		}
+				html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
+			}
 
-		wrap.innerHTML = html.join('');
+			wrap.innerHTML = html.join('');
 
-		var slip = Slip(wrap, 'y')
-			.webapp()
-			.end(function() {
-				var orient = this.orient.join('');
+			var slip = Slip(wrap, 'y')
+				.webapp()
+				.end(function() {
+					var orient = this.orient.join('');
 
-				if (orient.indexOf('up') > -1) {
-					if (!init) {
-						document.getElementsByTagName('b')[0].style.opacity = '0';
-						init = true;
+					if (orient.indexOf('up') > -1) {
+						if (!init) {
+							document.getElementsByTagName('b')[0].style.opacity = '0';
+							init = true;
+						}
 					}
-				}
-			});
+				});
 
-	</script>
+		</script>
+	  <style type="text/css">
+	    a[href*="tongji.baidu.com"]{
+	      display: none;
+	    }
+	  </style>
+	  <script type="text/javascript">
+	  var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+	  document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0808592e3802a8d59e78e2e601623a22' type='text/javascript'%3E%3C/script%3E"));
+	  </script>
+	</body>
 </html>
