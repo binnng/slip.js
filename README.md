@@ -29,7 +29,7 @@ slip.js
 使用 [bower](http://bower.io/) 安装
 
 ```
-$ bower install slip.binnng.js --save
+$ bower install binnng/slip.js --save
 ```
 
 更新版本
