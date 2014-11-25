@@ -1,5 +1,5 @@
 {
-  "name": "slip.binnng.js",
+  "name": "binnng/slip.js",
   "main": "dist/min.slip.js",
   "version": "0.0.1",
   "homepage": "https://github.com/binnng/slip.js",
