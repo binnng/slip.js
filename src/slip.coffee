@@ -544,10 +544,15 @@
 
   # slip
   # 暴露到window的对象，内部实例化`Slip`
-  slip = (ele, direction) ->
+  entry = (ele, direction) ->
     instance = new Slip ele, direction or X
     instance.init()
 
-  WIN.Slip = slip
+  if typeof define is "function"
+    define "binnng/slip.js", (require, exports, module) ->
+      entry
+
+  else
+    WIN["Slip"] = entry
 
 ) window, document

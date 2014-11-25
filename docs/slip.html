@@ -1084,7 +1084,6 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> isOut <span class="hljs-keyword">is</span> <span class="hljs-literal">yes</span>
         duration *= <span class="hljs-keyword">if</span> isVerticalWebapp <span class="hljs-keyword">then</span> absFinger[Y] / <span class="hljs-property">@pageHeight</span> <span class="hljs-keyword">else</span> absFinger[X] / <span class="hljs-property">@pageWidth</span>
         
-        
       setTransition ele, <span class="hljs-string">"all <span class="hljs-subst">#{duration}</span>ms ease-in"</span>
 
       <span class="hljs-keyword">if</span> isVerticalWebapp
@@ -1531,11 +1530,16 @@ Slip(ele, <span class="hljs-string">'y'</span>).time(<span class="hljs-number">2
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function">  <span class="hljs-title">slip</span> = <span class="hljs-params">(ele, direction)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function">  <span class="hljs-title">entry</span> = <span class="hljs-params">(ele, direction)</span> -&gt;</span>
     instance = <span class="hljs-keyword">new</span> Slip ele, direction <span class="hljs-keyword">or</span> X
     instance.init()
 
-  WIN.Slip = slip
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> define <span class="hljs-keyword">is</span> <span class="hljs-string">"function"</span>
+    define <span class="hljs-string">"binnng/slip.js"</span>, <span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">require</span>, exports, <span class="hljs-built_in">module</span>)</span> -&gt;</span>
+      entry
+
+  <span class="hljs-keyword">else</span>
+    WIN[<span class="hljs-string">"Slip"</span>] = entry
 
 ) <span class="hljs-built_in">window</span>, <span class="hljs-built_in">document</span></pre></div></div>
             
