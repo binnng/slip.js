@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Slip.js : 移动端跟随手指滑动组件，零依赖。">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Slip.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/binnng/slip.js">View on GitHub</a>
+
+          <h1 id="project_title">Slip.js</h1>
+          <h2 id="project_tagline">移动端跟随手指滑动组件，零依赖。</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/binnng/slip.js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/binnng/slip.js/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="slipjs" class="anchor" href="#slipjs"><span class="octicon octicon-link"></span></a>slip.js</h1>
+
+<p>移动端跟随手指滑动组件，零依赖。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>文档</h3>
+
+<p><a href="docs">文档</a></p>
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>源码</h3>
+<p>源码用<code>CoffeeScript</code>书写，<a href="docs/slip.html">查看源码</a>。</p>
+
+<h3>
+<a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>示例</h3>
+
+<p>手机访问：</p>
+
+<div style="text-align:center">
+<div style="float: left;margin-right: 40px">
+<p><a href="http://binnng.github.io/slip.js/demo/sohutv-ios8.html">搜狐视频客户端完美适配iOS8</a></p>
+
+<p><img src="http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ios8.html&amp;size=4" alt="搜狐视频客户端完美适配iOS8"></p>
+</div>
+
+<div style="float:left;">
+<p><a href="http://binnng.github.io/slip.js/demo/sohutv-ccnn.html">匆匆那年</a></p>
+
+<p><img src="http://qianbao.baidu.com/huodong/15/qrcode?text=http://binnng.github.io/slip.js/demo/sohutv-ccnn.html&amp;size=4" alt="匆匆那年"></p>
+
+</div>
+</div>
+<div style="clear: both"></div>
+<h3>
+<a name="%E5%AE%89%E8%A3%85" class="anchor" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h3>
+
+<h4>
+<a name="%E4%BD%BF%E7%94%A8-bower-%E5%AE%89%E8%A3%85" class="anchor" href="#%E4%BD%BF%E7%94%A8-bower-%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>使用 <a href="http://bower.io/">bower</a> 安装</h4>
+
+<pre><code>$ bower install slip.binnng.js --save
+</code></pre>
+
+<p>更新版本</p>
+
+<pre><code>$ bower update
+</code></pre>
+
+<h4>
+<a name="%E4%BD%BF%E7%94%A8-yeoman-%E5%AE%89%E8%A3%85" class="anchor" href="#%E4%BD%BF%E7%94%A8-yeoman-%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>使用 <a href="http://yeoman.io/">Yeoman</a> 安装</h4>
+
+<pre><code>$ npm install -g generator-webapp-slip
+</code></pre>
+
+<pre><code>$ yo webapp-slip
+</code></pre>
+
+<h3>
+<a name="%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81" class="anchor" href="#%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81"><span class="octicon octicon-link"></span></a>简单代码</h3>
+
+<p>一个全屏可滑动的宣传网页：</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+
+<span class="c1">// 垂直滑动</span>
+<span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">).</span><span class="nx">webapp</span><span class="p">();</span>
+
+<span class="c1">// 水平滑动</span>
+<span class="c1">// Slip(ele, "x").webapp();</span>
+</pre></div>
+
+<p>一个可滑动的高度为200px的轮播器：</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+
+<span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">).</span><span class="nx">slider</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+
+</pre></div>
+
+<p>一个可滑动的元素，开始滑动，滑动中，结束滑动都有自己的定制：</p>
+
+<div class="highlight highlight-javascript"><pre>  <span class="kd">var</span> <span class="nx">ele</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"slip"</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">mySlip</span> <span class="o">=</span> <span class="nx">Slip</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span> <span class="s2">"xy"</span><span class="p">);</span>
+
+  <span class="nx">mySlip</span>
+    <span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'start'</span><span class="p">);</span>
+
+      <span class="c1">// 事件对象</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+      <span class="c1">// 当前坐标值</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">coord</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">move</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'move'</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'end'</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">coord</span><span class="p">);</span>
+
+      <span class="c1">// 滑动方向</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">orient</span><span class="p">);</span>
+    <span class="p">});</span>
+</pre></div>
+</section></div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Slip.js maintained by <a href="https://github.com/binnng">binnng</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+    
+  <style type="text/css">
+    a[href*="tongji.baidu.com"]{
+      display: none;
+    }
+  </style>
+  <script type="text/javascript">
+  var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0808592e3802a8d59e78e2e601623a22' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  </body>
+</html>

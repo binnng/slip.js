@@ -6,7 +6,7 @@
 		<meta name="format-detection" content="telephone=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<title>搜狐视频客户端完美适配iOS8</title>
+		<title>和大家说件事</title>
 		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
 		<script type="text/javascript" src="../dist/min.slip.js"></script>
 		<style type="text/css">
@@ -45,6 +45,14 @@
 				transition: all .4s ease-in;
 			}
 
+			#wrap p{
+				font-size: 8em;
+				text-align: center;
+				margin: 0;
+				line-height: 4;
+				position: relative;
+			}
+
 
 			b:before, b:after {
 				content: "";
@@ -66,7 +74,18 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="wrap"></div>
+			<div id="wrap">
+				<p style="font-size: 20px;line-height:10">和大家说件事<b></b></p>
+				<p>5</p>
+				<p>6</p>
+				<p>并</p>
+				<p>入</p>
+				<p>搜</p>
+				<p>狐</p>
+				<p>视</p>
+				<p>频</p>
+				<p>了</p>
+			</div>
 		</div>
 		<script type="text/javascript">
 			var isWindowOrient = (window.orientation || 0) === 0;
@@ -82,14 +101,6 @@
 			var init = false;
 
 			var html = [];
-
-			for (var i = 1; i < total + 1; i++) {
-				var _i = i === 5 ? 1 : i;
-
-				html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
-			}
-
-			wrap.innerHTML = html.join('');
 
 			var slip = Slip(wrap, 'y')
 				.webapp()
