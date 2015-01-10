@@ -22,9 +22,21 @@
 				background-position: center center;
 				position: relative;
 			}
+
+			.page a[href*="binnng.github.io"] {
+				position: absolute;
+				bottom: 1em;
+				left: 50%;
+				margin-left: -2em;
+				color: #333;
+			}
 			.page-1{
 				background-size: 50%;
 				background-position: center 30%;
+			}
+
+			.page-1 a[href*="binnng.github.io"] {
+				display: none;
 			}
 
 			.orient .page{
@@ -78,7 +90,7 @@
 				container.className = 'orient';
 			}
 
-			var total = 5;
+			var total = 4;
 			var init = false;
 
 			var html = [];
@@ -86,7 +98,7 @@
 			for (var i = 1; i < total + 1; i++) {
 				var _i = i === 5 ? 1 : i;
 
-				html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '</div>');
+				html.push('<div class="page page-' + _i + '" style="background-image:url(images/sohutv-ios8/' + _i + '.jpg)">' + (i == 1 ? '<b></b>' : '') + '<a href=http://binnng.github.io/>@binnng</a></div>');
 			}
 
 			wrap.innerHTML = html.join('');
