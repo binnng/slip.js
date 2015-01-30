@@ -98,6 +98,7 @@
       this.isSlider = false;
       this.isWebapp = false;
       this.duration = "400";
+      this.page = 0;
     }
 
     Slip.prototype.start = function(fn) {
@@ -205,20 +206,18 @@
     };
 
     Slip.prototype.onSliderEnd = function(event) {
-      var absFinger, duration, ele, isDown, isLeft, isOut, isRight, isUp, isVerticalWebapp, orient, page, pageNum, trans;
+      var absFinger, duration, ele, isDown, isLeft, isRight, isUp, isVerticalWebapp, orient, page, pageNum;
       orient = this.orient.join("");
-      trans = 0;
-      isOut = false;
       page = this.page;
       pageNum = this.pageNum;
       ele = this.ele;
       duration = this.duration;
       absFinger = this.absFinger;
+      isVerticalWebapp = this.direction === Y;
       isUp = orient.indexOf(UP) > -1;
       isDown = orient.indexOf(DOWN) > -1;
       isLeft = orient.indexOf(LEFT) > -1;
       isRight = orient.indexOf(RIGHT) > -1;
-      isVerticalWebapp = this.direction === Y;
       if (isVerticalWebapp) {
         if (isUp) {
           page++;
@@ -236,24 +235,11 @@
       }
       if (page === pageNum) {
         page = pageNum - 1;
-        isOut = true;
       }
       if (page === -1) {
         page = 0;
-        isOut = true;
       }
-      if (isOut === true) {
-        duration *= isVerticalWebapp ? absFinger[Y] / this.pageHeight : absFinger[X] / this.pageWidth;
-      }
-      setTransition(ele, "all " + duration + "ms ease-in");
-      if (isVerticalWebapp) {
-        trans = "-" + (page * this.pageHeight);
-        setTranslate(ele, 0, trans, 0);
-      } else {
-        trans = "-" + (page * this.pageWidth);
-        setTranslate(ele, trans, 0, 0);
-      }
-      return this.page = page;
+      return this.jump(page);
     };
 
     Slip.prototype.init = function() {
@@ -403,6 +389,49 @@
     Slip.prototype.time = function(duration) {
       this.duration = String(duration).replace("ms", "");
       return this;
+    };
+
+    Slip.prototype.jump = function(page) {
+      var absFinger, duration, ele, isOut, isVerticalWebapp, orient, pageNum, trans;
+      orient = this.orient.join("");
+      trans = 0;
+      isOut = false;
+      ele = this.ele;
+      pageNum = this.pageNum;
+      duration = this.duration;
+      absFinger = this.absFinger || {
+        "x": 0,
+        "y": 0
+      };
+      isVerticalWebapp = this.direction === Y;
+      if (page > pageNum - 1) {
+        page = pageNum - 1;
+      }
+      if (page < 0) {
+        page = 0;
+      }
+      if (page === pageNum - 1) {
+        isOut = true;
+      }
+      if (page === 0) {
+        isOut = true;
+      }
+      if (isOut === true) {
+        duration *= isVerticalWebapp ? absFinger[Y] / this.pageHeight : absFinger[X] / this.pageWidth;
+      }
+      setTransition(ele, "all " + duration + "ms ease-in");
+      if (isVerticalWebapp) {
+        trans = "-" + (page * this.pageHeight);
+        setTranslate(ele, 0, trans, 0);
+      } else {
+        trans = "-" + (page * this.pageWidth);
+        setTranslate(ele, trans, 0, 0);
+      }
+      this.page = page;
+      trans = getTranslate(this.ele);
+      if (trans) {
+        return this.setCoord(trans);
+      }
     };
 
     return Slip;
