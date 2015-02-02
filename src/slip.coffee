@@ -195,10 +195,6 @@
       # ```
       @duration = "400"
 
-      # 当前第几页
-      # 从0开始
-      @page = 0
-
     start : (fn) -> (@onStart = fn) and @
     move  : (fn) -> (@onMove  = fn) and @
     end   : (fn) -> (@onEnd   = fn) and @
@@ -310,11 +306,10 @@
       ele = @ele
 
       @onSliderEnd event if @isSlider
-      ret = @onEnd.apply @, [event]
 
       # 结束后设置一次translate
       # 防止用户在自己定义的回调中改变了translate的值
-      trans = getTranslate @ele
+      trans = getTranslate this.ele
       @setCoord trans if trans
 
       # 最后来清空手指滑动的方向
@@ -324,9 +319,21 @@
       setTransition @ele, NULL
 
     # 当滑动结束时，针对轮播器做些特别处理
-    onSliderEnd: (event) ->
+    onSliderEnd: (event, data = {}) ->
+
+      {
+        jumpPage
+      } = data
+
+      isJump = jumpPage
+
       # 手指滑动的方向
       orient = @orient.join ""
+
+      trans = 0
+
+      # 是不是超出了，即第一页向前滑，最后一页向后滑
+      isOut = no
 
       page = @page
       pageNum = @pageNum
@@ -334,30 +341,60 @@
       duration = @duration
       absFinger = @absFinger
 
-
-      # 是不是垂直滑动
-      isVerticalWebapp = @direction is Y
-
       isUp = orient.indexOf(UP) > -1
       isDown = orient.indexOf(DOWN) > -1
       isLeft = orient.indexOf(LEFT) > -1
       isRight = orient.indexOf(RIGHT) > -1
 
-      if isVerticalWebapp
-        page++ if isUp
-        page-- if isDown
-      else 
-        page++ if isLeft
-        page-- if isRight
+      # 是不是垂直滑动
+      isVerticalWebapp = @direction is Y
+
+      if jumpPage isnt UNDEFINED
+        page = jumpPage
+
+      else
+        if isVerticalWebapp
+          page++ if isUp
+          page-- if isDown
+        else 
+          page++ if isLeft
+          page-- if isRight
 
       # 归位超出的页数
-      if page is pageNum
+      if page >= pageNum
         page = pageNum - 1
+        isOut = yes
 
-      if page is -1
+      if page < 0
         page = 0
+        isOut = yes
 
-      @jump page
+
+      # 这里做了个细节处理
+      # 1. 当用户定义整页滑动的时长为400ms
+      # 2. 如果在超出时，反弹回去的时间不应为400ms
+      # 3. 反弹的距离 < 页面的距离
+      # 4. 所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)
+      # 5. 即反弹的时长 < 整页过渡的时长
+      if isOut is yes and not isJump
+        duration *= if isVerticalWebapp then absFinger[Y] / @pageHeight else absFinger[X] / @pageWidth
+        
+      setTransition ele, "all #{duration}ms ease-in"
+
+      if isVerticalWebapp
+        trans = "-#{page * @pageHeight}"
+        setTranslate ele, 0, trans, 0
+      else
+        trans = "-#{page * @pageWidth}"
+        setTranslate ele, trans, 0, 0
+
+      @page = page
+
+      @onTouchEnd.call @, NULL if isJump
+
+      ret = @onEnd.apply @, [event]
+
+      @
 
     # 初始化
     init: -> 
@@ -523,65 +560,12 @@
       @
 
     # jump(page)
-    # -----
-    # 跳转到第几页
+    # ------
+    # 跳转到指定页
     jump: (page) ->
+      @onSliderEnd NULL, jumpPage: page
 
-      # 手指滑动的方向
-      orient = @orient.join ""
-
-      trans = 0
-
-      # 是不是超出了，即第一页向前滑，最后一页向后滑
-      isOut = no
-
-      ele = @ele
-      pageNum = @pageNum
-      duration = @duration
-      absFinger = @absFinger or "x": 0, "y": 0
-
-      # 是不是垂直滑动
-      isVerticalWebapp = @direction is Y
-
-
-      if page > pageNum - 1
-        page = pageNum - 1
-
-      if page < 0
-        page = 0
-
-      # 归位超出的页数
-      if page is pageNum - 1
-        isOut = yes
-
-      if page is 0
-        isOut = yes
-
-      # 这里做了个细节处理
-      # 1. 当用户定义整页滑动的时长为400ms
-      # 2. 如果在超出时，反弹回去的时间不应为400ms
-      # 3. 反弹的距离 < 页面的距离
-      # 4. 所以反弹的时长 = 整页的时长 * (反弹的距离 / 整页的距离)
-      # 5. 即反弹的时长 < 整页过渡的时长
-      # 
-      # 恩，这叫情怀
-      if isOut is yes
-        duration *= if isVerticalWebapp then absFinger[Y] / @pageHeight else absFinger[X] / @pageWidth
-        
-      setTransition ele, "all #{duration}ms ease-in"
-
-      if isVerticalWebapp
-        trans = "-#{page * @pageHeight}"
-        setTranslate ele, 0, trans, 0
-      else
-        trans = "-#{page * @pageWidth}"
-        setTranslate ele, trans, 0, 0
-
-      @page = page
-      
-      trans = getTranslate @ele
-      @setCoord trans if trans
-      
+      @
 
   # slip
   # 暴露到window的对象，内部实例化`Slip`

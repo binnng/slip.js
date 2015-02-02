@@ -98,7 +98,6 @@
       this.isSlider = false;
       this.isWebapp = false;
       this.duration = "400";
-      this.page = 0;
     }
 
     Slip.prototype.start = function(fn) {
@@ -187,13 +186,12 @@
     };
 
     Slip.prototype.onTouchEnd = function(event) {
-      var ele, ret, trans;
+      var ele, trans;
       this._isPressed = false;
       ele = this.ele;
       if (this.isSlider) {
         this.onSliderEnd(event);
       }
-      ret = this.onEnd.apply(this, [event]);
       trans = getTranslate(this.ele);
       if (trans) {
         this.setCoord(trans);
@@ -205,41 +203,70 @@
       return setTransition(this.ele, NULL);
     };
 
-    Slip.prototype.onSliderEnd = function(event) {
-      var absFinger, duration, ele, isDown, isLeft, isRight, isUp, isVerticalWebapp, orient, page, pageNum;
+    Slip.prototype.onSliderEnd = function(event, data) {
+      var absFinger, duration, ele, isDown, isJump, isLeft, isOut, isRight, isUp, isVerticalWebapp, jumpPage, orient, page, pageNum, ret, trans;
+      if (data == null) {
+        data = {};
+      }
+      jumpPage = data.jumpPage;
+      isJump = jumpPage;
       orient = this.orient.join("");
+      trans = 0;
+      isOut = false;
       page = this.page;
       pageNum = this.pageNum;
       ele = this.ele;
       duration = this.duration;
       absFinger = this.absFinger;
-      isVerticalWebapp = this.direction === Y;
       isUp = orient.indexOf(UP) > -1;
       isDown = orient.indexOf(DOWN) > -1;
       isLeft = orient.indexOf(LEFT) > -1;
       isRight = orient.indexOf(RIGHT) > -1;
-      if (isVerticalWebapp) {
-        if (isUp) {
-          page++;
-        }
-        if (isDown) {
-          page--;
-        }
+      isVerticalWebapp = this.direction === Y;
+      if (jumpPage !== UNDEFINED) {
+        page = jumpPage;
       } else {
-        if (isLeft) {
-          page++;
-        }
-        if (isRight) {
-          page--;
+        if (isVerticalWebapp) {
+          if (isUp) {
+            page++;
+          }
+          if (isDown) {
+            page--;
+          }
+        } else {
+          if (isLeft) {
+            page++;
+          }
+          if (isRight) {
+            page--;
+          }
         }
       }
-      if (page === pageNum) {
+      if (page >= pageNum) {
         page = pageNum - 1;
+        isOut = true;
       }
-      if (page === -1) {
+      if (page < 0) {
         page = 0;
+        isOut = true;
       }
-      return this.jump(page);
+      if (isOut === true && !isJump) {
+        duration *= isVerticalWebapp ? absFinger[Y] / this.pageHeight : absFinger[X] / this.pageWidth;
+      }
+      setTransition(ele, "all " + duration + "ms ease-in");
+      if (isVerticalWebapp) {
+        trans = "-" + (page * this.pageHeight);
+        setTranslate(ele, 0, trans, 0);
+      } else {
+        trans = "-" + (page * this.pageWidth);
+        setTranslate(ele, trans, 0, 0);
+      }
+      this.page = page;
+      if (isJump) {
+        this.onTouchEnd.call(this, NULL);
+      }
+      ret = this.onEnd.apply(this, [event]);
+      return this;
     };
 
     Slip.prototype.init = function() {
@@ -392,46 +419,10 @@
     };
 
     Slip.prototype.jump = function(page) {
-      var absFinger, duration, ele, isOut, isVerticalWebapp, orient, pageNum, trans;
-      orient = this.orient.join("");
-      trans = 0;
-      isOut = false;
-      ele = this.ele;
-      pageNum = this.pageNum;
-      duration = this.duration;
-      absFinger = this.absFinger || {
-        "x": 0,
-        "y": 0
-      };
-      isVerticalWebapp = this.direction === Y;
-      if (page > pageNum - 1) {
-        page = pageNum - 1;
-      }
-      if (page < 0) {
-        page = 0;
-      }
-      if (page === pageNum - 1) {
-        isOut = true;
-      }
-      if (page === 0) {
-        isOut = true;
-      }
-      if (isOut === true) {
-        duration *= isVerticalWebapp ? absFinger[Y] / this.pageHeight : absFinger[X] / this.pageWidth;
-      }
-      setTransition(ele, "all " + duration + "ms ease-in");
-      if (isVerticalWebapp) {
-        trans = "-" + (page * this.pageHeight);
-        setTranslate(ele, 0, trans, 0);
-      } else {
-        trans = "-" + (page * this.pageWidth);
-        setTranslate(ele, trans, 0, 0);
-      }
-      this.page = page;
-      trans = getTranslate(this.ele);
-      if (trans) {
-        return this.setCoord(trans);
-      }
+      this.onSliderEnd(NULL, {
+        jumpPage: page
+      });
+      return this;
     };
 
     return Slip;
