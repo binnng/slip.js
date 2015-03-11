@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>搜狐视频 Apple Watch</title>
+		<meta  name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="../dist/min.slip.js"></script>
+		<style type="text/css">
+			body{
+				background-color: #f2f4f5;
+				margin: 0;
+				padding: 0;
+			}
+
+			.page{
+				position: relative;
+				background-color: #f2f2f2;
+			}
+
+			.page em{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background-size: 100%;
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+
+			.page a[href*="binnng.github.io"] {
+				position: absolute;
+				bottom: 1em;
+				left: 50%;
+				margin-left: -2em;
+				color: #333;
+			}
+			.page-1 {
+				background:-webkit-linear-gradient( top, #d34a37 0%, #d34a37 50%, #f2f2f2 50%, #f2f2f2 100% );
+			}
+			.page-1 em{
+				background-size: 100%;
+				background-position: center center;
+			}
+
+			.page-2 em{
+				background-size: 100%;
+				background-position: bottom center;
+				background-color: #dabd95;
+			}
+
+			.page-1 a[href*="binnng.github.io"] {
+				display: none;
+			}
+
+			.orient .page{
+				background-size: contain;
+			}
+
+			b{
+				position: absolute;
+				bottom: 15px;
+				left: 0;
+				right: 0;
+				height: 15px;
+				opacity: .4;
+				-webkit-transition: all .4s ease-in;
+				transition: all .4s ease-in;
+			}
+
+
+			b:before, b:after {
+				content: "";
+				display: block;
+				background: #000;
+				width: 2px;
+				height: 14px;
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				-webkit-transform: rotate(-55deg);
+				-webkit-transform-origin: 100% 100%;
+			}
+			b:after {
+				-webkit-transform: rotate(55deg);
+				-webkit-transform-origin: 0 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="wrap"></div>
+		</div>
+		<script type="text/javascript">
+			var isWindowOrient = (window.orientation || 0) === 0;
+
+			var wrap = document.getElementById('wrap');
+			var container = document.getElementById('container');
+			
+			if (isWindowOrient) {
+				container.className = 'orient';
+			}
+
+			var total = 4;
+			var init = false;
+
+			var html = [];
+
+			for (var i = 1; i < total + 1; i++) {
+				var _i = i === 5 ? 1 : i;
+
+				html.push('<div class="page page-' + _i + '">' + (i == 1 ? '<b></b>' : '') + '<em style="background-image:url(images/sohutv-apple-watch/' + _i + '.jpg)"></em></div>');
+			}
+
+			wrap.innerHTML = html.join('');
+
+			var slip = Slip(wrap, 'y')
+				.webapp()
+				.end(function() {
+					var orient = this.orient.join('');
+
+					if (orient.indexOf('up') > -1) {
+						if (!init) {
+							document.getElementsByTagName('b')[0].style.opacity = '0';
+							init = true;
+						}
+					}
+				});
+
+		</script>
+	  <style type="text/css">
+	    a[href*="tongji.baidu.com"]{
+	      display: none;
+	    }
+	  </style>
+	  <script type="text/javascript">
+	  var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+	  document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0808592e3802a8d59e78e2e601623a22' type='text/javascript'%3E%3C/script%3E"));
+	  </script>
+	</body>
+</html>
